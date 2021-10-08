@@ -13,6 +13,9 @@ if empty(glob($HOME.'/.config/nvim/autoload/plug.vim'))
 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+if empty(glob($HOME.'/.config/nvim/plugged/wildfire.vim/autoload/wildfire.vim'))
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
 " ===
 " === Create a _machine_specific.vim file to adjust machine specific stuff, like python interpreter location
 " ===
@@ -52,7 +55,7 @@ set foldmethod=indent	" 设置折叠方式
 set foldlevel=1	" 折叠等级
 set cursorline  "高亮当前行"
 set encoding=utf-8
-"set ignorecase " 忽略大小写	
+set ignorecase " 忽略大小写	
 set smartcase	  " 只能过滤大小写
 set wrap  " 自动换行
 set linebreak " 只有遇到指定的符号（比如空格、连词号和其他标点符号），才发生折行
@@ -116,17 +119,9 @@ cmap w!! %!sudo tee > /dev/null %
 " ==============================================================================
 " === Install Plugins with Vim-Plug
 " ==============================================================================
- autocmd VimEnter *
-  \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-  \|   PlugInstall --sync | q
-  \| endif
-
 call plug#begin('$HOME/.config/nvim/plugged')
 " 安装插件只需要把github后缀地址放这里,重启后在vim命令行模式执行: PlugInstall 就ojbk了
 Plug 'mhinz/vim-startify'
-" 状态栏
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 Plug 'glepnir/spaceline.vim'
 " buffe line
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
@@ -137,8 +132,9 @@ Plug 'yggdroot/indentline'
 Plug 'w0ng/vim-hybrid'  " 不支持真色彩 
 Plug 'liuchengxu/space-vim-dark'
 
-
-Plug 'liuchengxu/vim-clap'
+" fzf.vim 文件搜索工具，需要下载命令行搜索工具fzf
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " 批量替换插件
 Plug 'brooth/far.vim'
@@ -171,7 +167,7 @@ Plug 'voldikss/vim-floaterm'
 Plug 'liuchengxu/vista.vim'
 
 " 高亮当前单词 可以给当前光标下的单词增加下划线  
-Plug 'litchyny/vim-cursorword'
+Plug 'itchyny/vim-cursorword'
 " 可以使用不同颜色同时高亮多个单词 <leader>k 可以高亮当前单词，K取消
 Plug 'lfv89/vim-interestingwords'
 call plug#end()
@@ -182,16 +178,16 @@ call plug#end()
 " ==============================================================================
 " 背景主题(用插件下载的主题需要在这里配置使用，否则会报错)
 set background=dark
-let g:space_vim_dark_background = 234 " 背景色深
+let g:space_vim_dark_background = 234" 背景色深
 colorscheme space-vim-dark
 hi Comment cterm=italic "支持斜体
 hi Comment guifg=#5C6370 ctermfg=59 " 灰色注释
 " 真色彩
 set termguicolors
 " 透明背景
-hi Normal     ctermbg=NONE guibg=NONE
+"hi Normal     ctermbg=NONE guibg=NONE
 hi LineNr     ctermbg=NONE guibg=NONE
-hi SignColumn ctermbg=NONE guibg=NONE
+"hi SignColumn ctermbg=NONE guibg=NONE
 
 " ================================= Plug Config=================================
 " ==============================================================================
@@ -209,28 +205,58 @@ nnoremap <silent> N :call WordNavigation(0)<cr>
 " === vista.vim(在标签里面按p可以预览代码)
 " === 更多配置项参考:help vista-options
 " ==============================================================================
-nnoremap <silent><nowait> <F5> :<C-u>Vista!!<cr>
+nnoremap <silent><nowait> <leader>tt :<C-u>Vista!!<cr>
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_sidebar_width = 40
 let g:vista_disable_statusline = 1
-let g:vista_default_executive = 'ctags'
+let g:vista_default_executive = 'coc'
 let g:vista_cursor_delay=100
 let g:vista_close_on_jump=1
+let g:vista_close_on_fzf_select=1
 let g:vista_vimwiki_executive = 'markdown'
 let g:vista_executive_for = {
   \ 'vimwiki': 'markdown',
+  \ 'php': 'coc',
   \ 'yaml': 'coc',
   \ 'typescript': 'coc',
+  \ 'go': 'coc',
   \ 'python': 'coc',
   \ }
+let g:vista_fzf_preview = ['right:50%']
+" / 使用fzf 查找
+autocmd FileType vista,vista_kind nnoremap <buffer> <silent> / :<c-u>call vista#finder#fzf#Run()<CR>
 " 浮窗颜色
-hi VistaFloat ctermbg=237 guibg=#3a3a3a  
-
+hi VistaFloat ctermbg=237 guibg=#3a3a3a 
 " ==============================================================================
-" === vim-clap
+" === fzf
 " ==============================================================================
+nnoremap <silent> <Leader>F :Rg <C-R><C-W><CR>
+" 搜索文件
+nnoremap <silent> <c-p> :Files<CR>
+nnoremap <silent> <c-h> :History<CR>
+let g:fzf_preview_window = 'right:60%'
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
 
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
+" 呼出关闭BUFFER的窗口
+noremap <leader>d :BD<CR>
+
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 " ==============================================================================
 " === vim-floaterm
 " ==============================================================================
@@ -306,10 +332,10 @@ let g:coc_global_extensions = [
 			\ 'coc-python',
 			\ 'coc-actions',
 			\ 'coc-diagnostic',
-		        \ 'coc-lists',
-     			\ 'coc-git',
-    			\ 'coc-emoji',
-    			\ 'coc-explorer',
+		    \ 'coc-lists',
+     		\ 'coc-git',
+    		\ 'coc-emoji',
+    		\ 'coc-explorer',
 			\ 'coc-translator',
   			\ 'coc-pairs',
   			\ 'coc-syntax',
@@ -570,7 +596,8 @@ let bufferline.no_name_title = v:null
 " === spaceline.vim
 " === https://github.com/glepnir/spaceline.vim
 " ==============================================================================
-"let g:spaceline_colorscheme = 'srcery'         
+let g:spaceline_colorscheme = 'srcery'         
+
 "==============================================================================
 " vim-go 插件
 "==============================================================================
