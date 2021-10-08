@@ -21,7 +21,7 @@ if empty(glob('~/.config/nvim/_machine_specific.vim'))
 	let has_machine_specific_file = 0
 	silent! exec "!cp ~/.config/nvim/default_configs/_machine_specific_default.vim ~/.config/nvim/_machine_specific.vim"
 endif
-source $XDG_CONFIG_HOME/nvim/_machine_specific.vim
+source $HOME/.config/nvim/_machine_specific.vim
 
 " ==============================================================================
 " === Normal System  资料：http://www.ruanyifeng.com/blog/2018/09/vimrc.html
@@ -130,7 +130,7 @@ Plug 'mhinz/vim-startify'
 Plug 'glepnir/spaceline.vim'
 " buffe line
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
-Plug 'romgrk/barbar.nvim
+Plug 'romgrk/barbar.nvim'
 
 Plug 'yggdroot/indentline'
 
