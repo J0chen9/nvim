@@ -32,7 +32,7 @@ source $HOME/.config/nvim/_machine_specific.vim
 " ============================================================================== 
 set number	" 设置行号
 syntax on	" 语法高亮
-set clipboard=unnamed   " 鼠标复制到无名寄存器
+"set clipboard=unnamed   " 鼠标复制到无名寄存器
 " tab默认显示宽度是8个空格，太丑了，要改一下
 set autoindent " 自动缩进
 set noexpandtab " 编辑输入Tab字符时,自动替换成空格
@@ -52,7 +52,7 @@ set showcmd " 命令模式下显示键入的指令
 set wildmenu " 命令行模式显示补全窗口,使用<Tab>和<S-Tab>来回移动进行补全
 " set wildmode=list:longest,full "将 显示可能匹配的文件列表，并使用最长的子串进行补全
 set foldmethod=indent	" 设置折叠方式
-set foldlevel=1	" 折叠等级
+set foldlevel=99	" 折叠等级
 set cursorline  "高亮当前行"
 set encoding=utf-8
 set ignorecase " 忽略大小写	
@@ -66,6 +66,7 @@ set scrolloff=3 " 让屏幕总数能看到上下3行的内容（让编辑行自�
 set ttyfast " 快速鼠标滚动
 set lazyredraw " to avoid scrolling problems
 
+set mouse=nv
 " 解决tmux渲染冲突问题
 set t_Co=256 			" terminal Color 指终端支持的颜色数量
 " set term=xterm-256color 	"告诉Vim使用哪种终端类型 它控制Vim各个方面的显示/渲染
@@ -86,7 +87,6 @@ if has('persistent_undo')
 	set undofile
 	set undodir=$HOME/.config/nvim/tmp/undo,.
 endif
-set autochdir
 " ==============================================================================
 " === Basic Mappings 方便的键位映射（个人喜好）
 " ==============================================================================
@@ -114,7 +114,7 @@ noremap K 5k
 
   
 " w!! 用sudo权限保存文件
-cmap w!! %!sudo tee > /dev/null %
+"cmap w!! %!sudo tee > /dev/null %
   
 " ==============================================================================
 " === Install Plugins with Vim-Plug
@@ -122,7 +122,17 @@ cmap w!! %!sudo tee > /dev/null %
 call plug#begin('$HOME/.config/nvim/plugged')
 " 安装插件只需要把github后缀地址放这里,重启后在vim命令行模式执行: PlugInstall 就ojbk了
 Plug 'mhinz/vim-startify'
-Plug 'glepnir/spaceline.vim'
+
+" statusline
+"Plug 'liuchengxu/eleline.vim'
+"Plug 'theniceboy/eleline.vim'
+"Plug 'ojroques/vim-scrollstatus'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+"display
+Plug 'ryanoasis/vim-devicons'
+Plug 'luochen1990/rainbow'
 " buffe line
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'romgrk/barbar.nvim'
@@ -168,8 +178,10 @@ Plug 'liuchengxu/vista.vim'
 
 " 高亮当前单词 可以给当前光标下的单词增加下划线  
 Plug 'itchyny/vim-cursorword'
-" 可以使用不同颜色同时高亮多个单词 <leader>k 可以高亮当前单词，K取消
+" 可以使用不同颜色同时高亮多个单词 leader>k 可以高亮当前单词，K取消
 Plug 'lfv89/vim-interestingwords'
+
+Plug 'theniceboy/vim-snippets'
 call plug#end()
   
   
@@ -185,11 +197,21 @@ hi Comment guifg=#5C6370 ctermfg=59 " 灰色注释
 " 真色彩
 set termguicolors
 " 透明背景
-"hi Normal     ctermbg=NONE guibg=NONE
+hi Normal     ctermbg=NONE guibg=NONE
 hi LineNr     ctermbg=NONE guibg=NONE
-"hi SignColumn ctermbg=NONE guibg=NONE
+hi SignColumn ctermbg=NONE guibg=NONE
 
 " ================================= Plug Config=================================
+" ==============================================================================
+" === indentline
+" ==============================================================================
+let g:indentLine_enabled = 1
+let g:indentLine_char='┆'
+" 在以下文件不起作用
+let g:indentLine_fileTypeExclude = ['defx', 'denite','startify','tagbar','vista_kind','vista','coc-explorer','dashboard','php','go']
+let g:indentLine_concealcursor = 'niv'
+let g:indentLine_showFirstIndentLevel =1
+
 " ==============================================================================
 " === vim-interestingwords
 " === 单词高亮
@@ -201,6 +223,7 @@ nnoremap <silent> ,F :call UncolorAllWords()<cr>
 
 nnoremap <silent> n :call WordNavigation(1)<cr>
 nnoremap <silent> N :call WordNavigation(0)<cr>
+
 " ==============================================================================
 " === vista.vim(在标签里面按p可以预览代码)
 " === 更多配置项参考:help vista-options
@@ -234,6 +257,8 @@ nnoremap <silent> <Leader>F :Rg <C-R><C-W><CR>
 " 搜索文件
 nnoremap <silent> <c-p> :Files<CR>
 nnoremap <silent> <c-h> :History<CR>
+nnoremap <silent> <c-f> :Lines<CR>
+
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
@@ -271,7 +296,7 @@ nnoremap <silent> <Leader>og :<C-u>FloatermNew --height=0.85 --width=0.8 lazygit
 let g:floaterm_position = 'center'
 let g:floaterm_wintype = 'floating'
 " Set floaterm window's background to black
-hi Floaterm guibg=black
+"hi Floaterm guibg=black
 " Set floating window border line color to cyan, and background to orange
 hi FloatermBorder guibg=none guifg=cyan
 
@@ -358,18 +383,19 @@ set shortmess+=c
 " 让json可以正确显示注释颜色
 autocmd FileType json syntax match Comment +\/\/.\+$+
 
-" 使用tab和s+tab进行前后补全
+"Make <tab> used for trigger completion, completion confirm, snippet expand and jump like VSCode
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
       \ <SID>check_back_space() ? "\<TAB>" :
       \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
-  
-" 使用 <c-o> 调出补全
+let g:coc_snippet_next = '<tab>'  
+" 使用 <c- > 调出补全
 inoremap <silent><expr> <c-space> coc#refresh()
   
 "使 <CR> 自动选择第一个完成项并在输入时通知 coc.nvim 进行格式化（即补全括号展开代码片段之类的）
@@ -382,8 +408,8 @@ nmap <silent> <leader>- <Plug>(coc-diagnostic-prev)
 nmap <silent> <leader>= <Plug>(coc-diagnostic-next)
   
 " 代码跳转，必备 跳转后你可以使用<C-o>跳回来
-nmap <silent> gd <Plug>(coc-definition)		" 跳转到定义
-nmap <silent> gD :tab sp<CR><Plug>(coc-definition)
+nmap <silent> <C-b> :call CocAction('jumpDefinition', 'tab drop')<CR>
+"nmap <silent> gd <Plug>(coc-definition)		" 跳转到定义
 nmap <silent> gy <Plug>(coc-type-definition) " 跳转到类型定义
 nmap <silent> gi <Plug>(coc-implementation)  " 跳转到实现
 nmap <silent> gr <Plug>(coc-references)		" 跳转到引用
@@ -448,7 +474,7 @@ function! s:cocActionsOpenFromSelected(type) abort
 endfunction
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>aw  <Plug>(coc-codeaction-selected)w
-    
+
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>ac  <Plug>(coc-codeaction)
           
@@ -507,7 +533,7 @@ nnoremap <silent> <Space>ba :BufferCloseAllButCurrent<CR>
 "                          :BufferCloseBuffersLeft<CR>
 "                          :BufferCloseBuffersRight<CR>
 " Magic buffer-picking mode
-nnoremap <silent> <C-s>    :BufferPick<CR>
+nnoremap <silent> <<Space>bs   :BufferPick<CR>
 " Sort automatically by...
 nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
 nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
@@ -570,7 +596,7 @@ let bufferline.insert_at_start = v:false
 let bufferline.insert_at_end = v:false
 
 " Sets the maximum padding width with which to surround each tab.
-let bufferline.maximum_padding = 4
+let bufferline.maximum_padding = 3
 
 " Sets the maximum buffer name length.
 let bufferline.maximum_length = 30
@@ -593,12 +619,24 @@ let bufferline.no_name_title = v:null
 
                
 " ==============================================================================
-" === spaceline.vim
-" === https://github.com/glepnir/spaceline.vim
+" === eleline.vim/ airline
+" === https://github.com/liuchengxu/eleline.vim
 " ==============================================================================
-let g:spaceline_colorscheme = 'srcery'         
+set laststatus=2
+"let g:airline_section_a = ''   " 模式
+" 使用coc-git的分支信息 g:coc_git_status including git branch and current project status.
+let g:airline_section_b = "%{get(g:,'coc_git_status','')}"   " 分支
+"let g:airline_section_c = ''		" 文件
+"let g:airline_section_x = ''		" 文件类型
+"let g:airline_section_y = ''		" 编码
+"let g:airline_section_z = ''		" 文本行信息
+let g:airline_section_error = ''
+let g:airline_section_warning  = ''
 
-"==============================================================================
+" 美化
+let g:airline_powerline_fonts=1
+let g:airline_theme = 'kolor' 
+
 " vim-go 插件
 "==============================================================================
  " disable vim-go :GoDef short cut (gd)

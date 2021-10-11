@@ -1,6 +1,7 @@
 {
+	"coc.preferences.jumpCommand": "drop",
 	// 补全相关
-  "suggest.detailMaxLength": 60,
+	"suggest.detailMaxLength": 60,
 	"suggest.noselect": true,
 	"suggest.enablePreselect": false,
 	"suggest.triggerAfterInsertEnter": true,
@@ -38,7 +39,7 @@
 		"value": "\uf89f",
 		"variable": "\ue71b"
 	},
-  "suggest.snippetIndicator": "🌟",
+	"suggest.snippetIndicator": "🌟",
 	//diagnostic
 	"diagnostic.errorSign": "\uf467",
 	"diagnostic.warningSign": "\uf071",
@@ -104,12 +105,12 @@
 	"explorer.file.showHiddenFiles": true,
 	"explorer.buffer.showHiddenBuffers": false,
 	"explorer.quitOnOpen": true,
-  "explorer.previewAction.onHover": "labeling", 
+	"explorer.previewAction.onHover": "labeling",
+	"intelephense.licenceKey": "00WIX4YQOC6G943",
+	// php: 记得安装库，不然跳转老是出错:npm i intelephense -g
 	// php索引路径，这玩意用的就是phpstorm的那套
 	"intelephense.environment.includePaths": [
-		"/home/jochen/workspace/php/xproject"
+		"/home/jochen/workspace/php/"
 	],
-	"intelephense.environment.phpVersion": "7.0",
-	"intelephense.licenceKey": "00WIX4YQOC6G943"
+	"intelephense.environment.phpVersion": "7.0"
 }
-
