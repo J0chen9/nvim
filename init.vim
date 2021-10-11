@@ -76,7 +76,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
   
 set helplang=cn " 设置中文帮助
 
-set virtualedit=block
+"set virtualedit=block
 " 设置备份文件、交换文件、操作历史文件的保存位置
 silent !mkdir -p $HOME/.config/nvim/tmp/backup
 silent !mkdir -p $HOME/.config/nvim/tmp/undo
@@ -116,6 +116,11 @@ noremap K 5k
 " w!! 用sudo权限保存文件
 "cmap w!! %!sudo tee > /dev/null %
   
+" Opening a terminal window
+noremap <F5> :set splitbelow<CR>:split<CR>:res -12<CR>:term<CR>
+" c-\ c-n进入正常模式
+let g:neoterm_autoscroll = 1
+autocmd TermOpen term://* startinsert
 " ==============================================================================
 " === Install Plugins with Vim-Plug
 " ==============================================================================
@@ -192,6 +197,7 @@ call plug#end()
 set background=dark
 let g:space_vim_dark_background = 234" 背景色深
 colorscheme space-vim-dark
+"colorscheme hybrid
 hi Comment cterm=italic "支持斜体
 hi Comment guifg=#5C6370 ctermfg=59 " 灰色注释
 " 真色彩
@@ -528,7 +534,7 @@ nnoremap <silent>    <A-c> :BufferClose<CR>
 " Wipeout buffer
 "                          :BufferWipeout<CR>
 " Close commands
-nnoremap <silent> <Space>ba :BufferCloseAllButCurrent<CR>
+nnoremap <silent> <Space>bw :BufferCloseAllButCurrent<CR>
 "                          :BufferCloseAllButPinned<CR>
 "                          :BufferCloseBuffersLeft<CR>
 "                          :BufferCloseBuffersRight<CR>
@@ -536,9 +542,9 @@ nnoremap <silent> <Space>ba :BufferCloseAllButCurrent<CR>
 nnoremap <silent> <<Space>bs   :BufferPick<CR>
 " Sort automatically by...
 nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
-nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
+"nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
+"nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
+"nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
 
 " Other:
 " :BarbarEnable - enables barbar (enabled by default)
@@ -635,7 +641,7 @@ let g:airline_section_warning  = ''
 
 " 美化
 let g:airline_powerline_fonts=1
-let g:airline_theme = 'kolor' 
+let g:airline_theme = 'monochrome' 
 
 " vim-go 插件
 "==============================================================================
