@@ -138,14 +138,17 @@ Plug 'vim-airline/vim-airline-themes'
 "display
 Plug 'ryanoasis/vim-devicons'
 Plug 'luochen1990/rainbow'
+
 " buffe line
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'romgrk/barbar.nvim'
 
 Plug 'yggdroot/indentline'
 
+" colorscheme
 Plug 'w0ng/vim-hybrid'  " 不支持真色彩 
 Plug 'liuchengxu/space-vim-dark'
+Plug 'romgrk/doom-one.vim'
 
 " fzf.vim 文件搜索工具，需要下载命令行搜索工具fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
@@ -156,8 +159,17 @@ Plug 'brooth/far.vim'
 Plug 'easymotion/vim-easymotion'
 
 " 修改成对内容
-Plug 'tpope/vim-surround'
-
+Plug 'machakann/vim-sandwich'
+" 远程遥控 c/d/y i/a(text-obj)
+Plug 'wellle/targets.vim'
+" 多光标
+Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+" 高亮当前单词 可以给当前光标下的单词增加下划线  
+Plug 'itchyny/vim-cursorword'
+" 可以使用不同颜色同时高亮多个单词 leader>k 可以高亮当前单词，K取消
+Plug 'lfv89/vim-interestingwords'
+" 回车键在 Visual mode实现jebarin的<c-w>
+Plug 'gcmt/wildfire.vim'
 
 " 补全插件
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -169,9 +181,6 @@ Plug 'fatih/vim-go'
 " 在侧边栏显示本文件与当前git结点的不同之处
 Plug 'airblade/vim-gitgutter'
   
-" 回车键在 Visual mode实现jebarin的<c-w>
-Plug 'gcmt/wildfire.vim'
-
 " 注释
 Plug '/tyru/caw.vim'
 
@@ -180,11 +189,6 @@ Plug 'voldikss/vim-floaterm'
 
 "  代码标签
 Plug 'liuchengxu/vista.vim'
-
-" 高亮当前单词 可以给当前光标下的单词增加下划线  
-Plug 'itchyny/vim-cursorword'
-" 可以使用不同颜色同时高亮多个单词 leader>k 可以高亮当前单词，K取消
-Plug 'lfv89/vim-interestingwords'
 
 Plug 'theniceboy/vim-snippets'
 call plug#end()
@@ -195,19 +199,29 @@ call plug#end()
 " ==============================================================================
 " 背景主题(用插件下载的主题需要在这里配置使用，否则会报错)
 set background=dark
-let g:space_vim_dark_background = 234" 背景色深
-colorscheme space-vim-dark
+"let g:space_vim_dark_background = 234" 背景色深
+
+"colorscheme space-vim-dark
+"hi Comment cterm=italic "支持斜体
+"hi Comment guifg=#5C6370 ctermfg=59 " 灰色注释
+
 "colorscheme hybrid
-hi Comment cterm=italic "支持斜体
-hi Comment guifg=#5C6370 ctermfg=59 " 灰色注释
+
+colorschem doom-one
+let g:doom_one_terminal_colors = v:true
+
 " 真色彩
 set termguicolors
 " 透明背景
-hi Normal     ctermbg=NONE guibg=NONE
-hi LineNr     ctermbg=NONE guibg=NONE
-hi SignColumn ctermbg=NONE guibg=NONE
+"hi Normal     ctermbg=NONE guibg=NONE
+"hi LineNr     ctermbg=NONE guibg=NONE
+"hi SignColumn ctermbg=NONE guibg=NONE
 
 " ================================= Plug Config=================================
+" ==============================================================================
+" === vim-sandwich
+" ==============================================================================
+runtime macros/sandwich/keymap/surround.vim  " use vim surround keymappings (ys/ds/cs)
 " ==============================================================================
 " === indentline
 " ==============================================================================
@@ -238,7 +252,7 @@ nnoremap <silent><nowait> <leader>tt :<C-u>Vista!!<cr>
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_sidebar_width = 40
 let g:vista_disable_statusline = 1
-let g:vista_default_executive = 'coc'
+let g:vista_default_executive = 'ctags'
 let g:vista_cursor_delay=100
 let g:vista_close_on_jump=1
 let g:vista_close_on_fzf_select=1
@@ -641,7 +655,8 @@ let g:airline_section_warning  = ''
 
 " 美化
 let g:airline_powerline_fonts=1
-let g:airline_theme = 'monochrome' 
+"let g:airline_theme = 'lucius' 
+let g:airline_theme = 'tomorrow' 
 
 " vim-go 插件
 "==============================================================================
