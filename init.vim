@@ -93,6 +93,18 @@ endif
 " 映射leader键位为空格
 let mapleader=' '	
 let g:mapleader=' '
+" Insert Mode Cursor Movement
+inoremap <A-a> <ESC>A
+" Disable the default s key
+noremap s <nop>
+
+" split the screens to up (horizontal), down (horizontal), left (vertical), right (vertical)
+noremap su :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
+noremap se :set splitbelow<CR>:split<CR>
+noremap sn :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
+noremap si :set splitright<CR>:vsplit<CR>
+" Spelling Check with <space>sc
+noremap <LEADER>sc :set spell!<CR>
 
 " Save & quit
 noremap Q :q<CR>
@@ -112,15 +124,18 @@ inoremap <C-l> <Right>
 noremap J 5j
 noremap K 5k
 
-  
+nnoremap <leader>3 :noh<cr>
+
 " w!! 用sudo权限保存文件
 "cmap w!! %!sudo tee > /dev/null %
-  
+
 " Opening a terminal window
 noremap <F5> :set splitbelow<CR>:split<CR>:res -12<CR>:term<CR>
 " c-\ c-n进入正常模式
 let g:neoterm_autoscroll = 1
 autocmd TermOpen term://* startinsert
+" Press <SPACE> + q to close the window below the current window
+noremap <LEADER>q <C-w>j:q<CR>
 " ==============================================================================
 " === Install Plugins with Vim-Plug
 " ==============================================================================
@@ -153,6 +168,7 @@ Plug 'romgrk/doom-one.vim'
 " fzf.vim 文件搜索工具，需要下载命令行搜索工具fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
 
 " 批量替换插件
 Plug 'brooth/far.vim'
@@ -173,7 +189,7 @@ Plug 'gcmt/wildfire.vim'
 
 " 补全插件
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
+Plug 'honza/vim-snippets'
 " go
 Plug 'fatih/vim-go'
   
@@ -190,7 +206,6 @@ Plug 'voldikss/vim-floaterm'
 "  代码标签
 Plug 'liuchengxu/vista.vim'
 
-Plug 'theniceboy/vim-snippets'
 call plug#end()
   
   
@@ -252,7 +267,7 @@ nnoremap <silent><nowait> <leader>tt :<C-u>Vista!!<cr>
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_sidebar_width = 40
 let g:vista_disable_statusline = 1
-let g:vista_default_executive = 'ctags'
+let g:vista_default_executive = 'ctags' " brew install universal-ctags 
 let g:vista_cursor_delay=100
 let g:vista_close_on_jump=1
 let g:vista_close_on_fzf_select=1
@@ -268,16 +283,25 @@ let g:vista_executive_for = {
 let g:vista_fzf_preview = ['right:50%']
 " / 使用fzf 查找
 autocmd FileType vista,vista_kind nnoremap <buffer> <silent> / :<c-u>call vista#finder#fzf#Run()<CR>
-" 浮窗颜色
-hi VistaFloat ctermbg=237 guibg=#3a3a3a 
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "[]",
+\  }
+function! NearestMethodOrFunction() abort
+	return get(b:, 'vista_nearest_method_or_function', '')
+endfunction
+set statusline+=%{NearestMethodOrFunction()}
+autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
 " ==============================================================================
 " === fzf
 " ==============================================================================
-nnoremap <silent> <Leader>F :Rg <C-R><C-W><CR>
+nnoremap <silent> <A-f> :Rg <C-R><C-W><CR>
+nnoremap <silent> <A-F> :Rg<CR>
 " 搜索文件
 nnoremap <silent> <c-p> :Files<CR>
 nnoremap <silent> <c-h> :History<CR>
-nnoremap <silent> <c-f> :Lines<CR>
+nnoremap <silent> <c-f> :BLines<CR>
 
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
@@ -342,10 +366,6 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " ==============================================================================
 " === far.vim
 " ==============================================================================
-" shortcut for far.vim find
-nnoremap <silent> <leader>/ :Farf<cr>
-vnoremap <silent> <leader>/ :Farf<cr>
-
 " shortcut for far.vim replace
 nnoremap <silent> <leader>r :Farr<cr>
 vnoremap <silent> <leader>r :Farr<cr>
@@ -428,8 +448,8 @@ nmap <silent> <leader>- <Plug>(coc-diagnostic-prev)
 nmap <silent> <leader>= <Plug>(coc-diagnostic-next)
   
 " 代码跳转，必备 跳转后你可以使用<C-o>跳回来
-nmap <silent> <C-b> :call CocAction('jumpDefinition', 'tab drop')<CR>
-"nmap <silent> gd <Plug>(coc-definition)		" 跳转到定义
+nmap <silent> <c-b> <Plug>(coc-definition)		" 跳转到定义
+"nmap <silent> gd :set splitright<CR>:vs<CR><Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition) " 跳转到类型定义
 nmap <silent> gi <Plug>(coc-implementation)  " 跳转到实现
 nmap <silent> gr <Plug>(coc-references)		" 跳转到引用
@@ -451,6 +471,8 @@ endfunction
 
 " F2进行重命名
 nmap <F2> <Plug>(coc-rename)
+nmap <leader>2 <Plug>(coc-refactor)
+
 " Formatting selected code.
 nmap <Leader>l 	<Plug>(coc-format)
 xmap <leader>f  <Plug>(coc-format-selected)
@@ -474,19 +496,7 @@ omap ic <Plug>(coc-classobj-i)
 xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)        
 
-        
-" Remap <C-d> and <C-u> for scroll float windows/popups.
-" 重映射<Cd>和<Cu>处理为滚动浮动窗口/弹出窗口
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-d> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-u> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-d> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-u> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-d> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-u> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
-          
-" 使用leader a 让当前光标所在代码弹出一些选项
+" 使用leader . 让当前光标所在代码弹出一些选项
 " 需要下载coc-actions
 " Remap for do codeAction of selected region
 function! s:cocActionsOpenFromSelected(type) abort
@@ -494,10 +504,10 @@ function! s:cocActionsOpenFromSelected(type) abort
 endfunction
 xmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <leader>aw  <Plug>(coc-codeaction-selected)w
-
 " Remap keys for applying codeAction to the current buffer.
 nmap <leader>ac  <Plug>(coc-codeaction)
-          
+nmap <leader>.  :CocAction<CR>
+
 " CoCList的映射，其是coc自带一个列表管理器，可以认为是开个小窗口做搜索，查询等功能的
 " Show all diagnostics. 在coclist显示所有诊断
 nnoremap <silent><nowait> ,a  :<C-u>CocList diagnostics<cr>
@@ -519,6 +529,8 @@ autocmd User CocGitStatusChange {command}
 " coc-explorer
 nnoremap <space>e :CocCommand explorer<CR>
               
+" snippet
+
 " ==============================================================================
 " === barbar.nvim   下面这两个nvim的buffer插件都很好
 " === https://github.com/romgrk/barbar.nvim
@@ -541,8 +553,9 @@ nnoremap <silent>    <A-6> :BufferGoto 6<CR>
 nnoremap <silent>    <A-7> :BufferGoto 7<CR>
 nnoremap <silent>    <A-8> :BufferGoto 8<CR>
 nnoremap <silent>    <A-9> :BufferLast<CR>
+" Magic buffer-picking mode
+   nnoremap <silent> <A-s>    :BufferPick<CR>
 " Pin/unpin buffer
-nnoremap <silent>    <A-p> :BufferPin<CR>
 " Close buffer
 nnoremap <silent>    <A-c> :BufferClose<CR>
 " Wipeout buffer
@@ -552,8 +565,6 @@ nnoremap <silent> <Space>bw :BufferCloseAllButCurrent<CR>
 "                          :BufferCloseAllButPinned<CR>
 "                          :BufferCloseBuffersLeft<CR>
 "                          :BufferCloseBuffersRight<CR>
-" Magic buffer-picking mode
-nnoremap <silent> <<Space>bs   :BufferPick<CR>
 " Sort automatically by...
 nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
 "nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
@@ -657,7 +668,11 @@ let g:airline_section_warning  = ''
 let g:airline_powerline_fonts=1
 "let g:airline_theme = 'lucius' 
 let g:airline_theme = 'tomorrow' 
-
+" 左边圆柱 右边箭头
+let g:airline_left_sep = "\uE0B5"
+let g:airline_left_sep = "\uE0B4"
+"let g:airline_right_sep = "\uE0B7"
+"let g:airline_right_sep = "\uE0B6"
 " vim-go 插件
 "==============================================================================
  " disable vim-go :GoDef short cut (gd)

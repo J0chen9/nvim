@@ -25,8 +25,8 @@
 		"event": "   (Event)",
 		"operator": "   (Operator)",
 		"module": "   (Module)",
-		"property": " 襁 (Property)",
-		"enum": " 練 (Enum)",
+		"property": " 襁  (Property)",
+		"enum": " 練  (Enum)",
 		"reference": "   (Reference)",
 		"keyword": "   (Keyword)",
 		"file": "   (File)",
@@ -48,11 +48,11 @@
 	//	"diagnostic.virtualText": true,
 	//	"diagnostic.virtualTextCurrentLineOnly": false,
 	//	"diagnostic.virtualTextPrefix": "       🔔 ",
-	//"diagnostic.errorSign": "✗",
-	"diagnostic.errorSign": " ",
+	"diagnostic.errorSign": "✗",
+	//	"diagnostic.errorSign": " ",
 	"diagnostic.warningSign": " ",
 	"diagnostic.infoSign": " ",
-	"diagnostic.hintSign": " ",
+	"diagnostic.hintSign": "💡",
 	//git
 	"git.enableGutters": false,
 	"git.branchCharacter": "\uf418",
@@ -89,8 +89,8 @@
 	//sessions
 	"session.directory": "~/.cache/vim/session",
 	// coc-explorer
-	"explorer.icon.expanded": "▾",
-	"explorer.icon.collapsed": "▸",
+	"explorer.icon.expanded": "",
+	"explorer.icon.collapsed": "",
 	"explorer.icon.enableNerdfont": true,
 	"explorer.floating.width": -20,
 	"explorer.floating.height": -10,
@@ -106,6 +106,18 @@
 			"expand": true
 		}
 	],
+	"explorer.icon.customIcons": {
+		"icons": {
+			"folderClosed": {
+				"code": "",
+				"color": "#00afaf"
+			},
+			"folderOpened": {
+				"code": "",
+				"color": "#00afaf"
+			}
+		}
+	},
 	"explorer.file.column.indent.indentLine": true,
 	"explorer.file.showHiddenFiles": true,
 	"explorer.buffer.showHiddenBuffers": false,
