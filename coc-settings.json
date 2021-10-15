@@ -1,12 +1,10 @@
 {
-	"coc.preferences.jumpCommand": "drop",
 	// 补全相关
 	"suggest.detailMaxLength": 60,
 	"suggest.noselect": true,
 	"suggest.enablePreselect": false,
 	"suggest.triggerAfterInsertEnter": true,
 	"suggest.autoTrigger": "always",
-	"suggest.timeout": 5000,
 	"suggest.enablePreview": true,
 	"suggest.floatEnable": true,
 	"suggest.detailField": "preview",
@@ -91,9 +89,6 @@
 	// coc-explorer
 	"explorer.icon.expanded": "",
 	"explorer.icon.collapsed": "",
-	"explorer.icon.enableNerdfont": true,
-	"explorer.floating.width": -20,
-	"explorer.floating.height": -10,
 	"explorer.openAction.strategy": "sourceWindow",
 	"explorer.width": 38,
 	"explorer.sources": [
@@ -122,9 +117,7 @@
 	"explorer.file.showHiddenFiles": true,
 	"explorer.buffer.showHiddenBuffers": false,
 	"explorer.quitOnOpen": true,
-	"explorer.previewAction.onHover": "labeling",
 	"intelephense.licenceKey": "00WIX4YQOC6G943",
-	// php: 记得安装库，不然跳转老是出错:npm i intelephense -g
 	// php索引路径，这玩意用的就是phpstorm的那套
 	"intelephense.environment.includePaths": [
 		"/home/jochen/workspace/php/"

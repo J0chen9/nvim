@@ -42,10 +42,9 @@ set softtabstop=-1	" 按tab键输入的空格数量，softtabstop的值为负数
 set showmatch " 显示当前列匹配括号
 set relativenumber " 相对行号
 " 让空格和tab可见
-"set list
-"set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
+set list
+set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
-set pastetoggle=<F6> " F6使用 :set paste和 :set nopaste切换
 set hlsearch	" 高亮搜索
 set incsearch "auto match targets
 set showcmd " 命令模式下显示键入的指令
@@ -64,19 +63,18 @@ set cursorline  " 当前行高亮
 
 set scrolloff=3 " 让屏幕总数能看到上下3行的内容（让编辑行自动位于屏幕中间）
 set ttyfast " 快速鼠标滚动
-set lazyredraw " to avoid scrolling problems
 
 set mouse=nv
 " 解决tmux渲染冲突问题
 set t_Co=256 			" terminal Color 指终端支持的颜色数量
 " set term=xterm-256color 	"告诉Vim使用哪种终端类型 它控制Vim各个方面的显示/渲染
+set virtualedit=block
 
 " 打开文件跳转到上次编辑的位置
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-  
+
 set helplang=cn " 设置中文帮助
 
-"set virtualedit=block
 " 设置备份文件、交换文件、操作历史文件的保存位置
 silent !mkdir -p $HOME/.config/nvim/tmp/backup
 silent !mkdir -p $HOME/.config/nvim/tmp/undo
@@ -93,6 +91,8 @@ endif
 " 映射leader键位为空格
 let mapleader=' '	
 let g:mapleader=' '
+set pastetoggle=<F6> " F6使用 :set paste和 :set nopaste切换
+
 " Insert Mode Cursor Movement
 inoremap <A-a> <ESC>A
 " Disable the default s key
@@ -113,6 +113,7 @@ noremap S :w<CR>
 
 " 在insert模式使用jj进入normal模式
 inoremap jj <Esc>
+inoremap kk <Esc>
 
 " 输入模式下移动
 inoremap <C-k> <Up>
@@ -124,7 +125,6 @@ inoremap <C-l> <Right>
 noremap J 5j
 noremap K 5k
 
-nnoremap <leader>3 :noh<cr>
 
 " w!! 用sudo权限保存文件
 "cmap w!! %!sudo tee > /dev/null %
@@ -236,7 +236,7 @@ set termguicolors
 " ==============================================================================
 " === vim-sandwich
 " ==============================================================================
-runtime macros/sandwich/keymap/surround.vim  " use vim surround keymappings (ys/ds/cs)
+let g:textobj_sandwich_no_default_key_mappings = 1 
 " ==============================================================================
 " === indentline
 " ==============================================================================
@@ -301,9 +301,8 @@ nnoremap <silent> <A-F> :Rg<CR>
 " 搜索文件
 nnoremap <silent> <c-p> :Files<CR>
 nnoremap <silent> <c-h> :History<CR>
-nnoremap <silent> <c-f> :BLines<CR>
 
-let g:fzf_preview_window = 'right:60%'
+let g:fzf_preview_window = 'right:50%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
 
 function! s:list_buffers()
@@ -366,6 +365,9 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " ==============================================================================
 " === far.vim
 " ==============================================================================
+nnoremap <silent> <leader>/ :Farf<cr>
+vnoremap <silent> <leader>/ :Farf<cr>
+"
 " shortcut for far.vim replace
 nnoremap <silent> <leader>r :Farr<cr>
 vnoremap <silent> <leader>r :Farr<cr>
@@ -406,10 +408,6 @@ let g:coc_global_extensions = [
   			\ 'coc-syntax',
 			\ 'coc-snippets']
 
-"Translator设置 popup
-nmap <Leader>ts <Plug>(coc-translator-p)
-vmap <Leader>ts <Plug>(coc-translator-pv)
-
 " 代码跳转时,如果没有保存文件，vim进行跳转时不允许的，是把打开一个缓冲区的操作
 " 该项就是设置把跳转文件放到缓冲区
 set hidden
@@ -448,14 +446,12 @@ nmap <silent> <leader>- <Plug>(coc-diagnostic-prev)
 nmap <silent> <leader>= <Plug>(coc-diagnostic-next)
   
 " 代码跳转，必备 跳转后你可以使用<C-o>跳回来
-nmap <silent> <c-b> <Plug>(coc-definition)		" 跳转到定义
+nmap <silent> <C-b> <Plug>(coc-definition)		" 跳转到定义
 "nmap <silent> gd :set splitright<CR>:vs<CR><Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition) " 跳转到类型定义
-nmap <silent> gi <Plug>(coc-implementation)  " 跳转到实现
-nmap <silent> gr <Plug>(coc-references)		" 跳转到引用
+nmap <silent> <A-t> <Plug>(coc-type-definition) " 跳转到类型定义
+nmap <silent> <A-i> <Plug>(coc-implementation)  " 跳转到实现
+nmap <silent> <A-r> <Plug>(coc-references)		" 跳转到引用
 
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
 
 " 使用 leader h 在预览窗口中看类型，方法文档
 nnoremap <silent> <leader>h :call <SID>show_documentation()<CR>
@@ -471,7 +467,6 @@ endfunction
 
 " F2进行重命名
 nmap <F2> <Plug>(coc-rename)
-nmap <leader>2 <Plug>(coc-refactor)
 
 " Formatting selected code.
 nmap <Leader>l 	<Plug>(coc-format)
@@ -508,12 +503,6 @@ nmap <leader>aw  <Plug>(coc-codeaction-selected)w
 nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>.  :CocAction<CR>
 
-" CoCList的映射，其是coc自带一个列表管理器，可以认为是开个小窗口做搜索，查询等功能的
-" Show all diagnostics. 在coclist显示所有诊断
-nnoremap <silent><nowait> ,a  :<C-u>CocList diagnostics<cr>
-nnoremap <silent><nowait> ,l  :<C-u>CocList<cr>          
-nnoremap ,c :CocCommand<CR>
-
 " coc-git 状态栏还是用gitgutter的
 " navigate chunks of current buffer
 "nmap <LEADER>g- <Plug>(coc-git-prevchunk)
@@ -528,8 +517,14 @@ autocmd User CocGitStatusChange {command}
 
 " coc-explorer
 nnoremap <space>e :CocCommand explorer<CR>
-              
-" snippet
+
+nmap <Leader>1 <Plug>(coc-translator-p)
+vmap <Leader>1 <Plug>(coc-translator-pv)
+nnoremap <leader>2 :noh<cr>
+nnoremap <leader>3 :CocCommand<CR>
+nnoremap <silent><nowait> <leader>4  :<C-u>CocList diagnostics<cr>
+nnoremap <silent><nowait> <leader>5  :<C-u>CocList<cr>          
+nmap <leader>6 <Plug>(coc-refactor)
 
 " ==============================================================================
 " === barbar.nvim   下面这两个nvim的buffer插件都很好
@@ -538,8 +533,8 @@ nnoremap <space>e :CocCommand explorer<CR>
 " ============================================================================== 
 "================key mapping==================
 " Move to previous/next
-nnoremap <silent>    <A--> :BufferPrevious<CR>
-nnoremap <silent>    <A-=> :BufferNext<CR>
+nnoremap <silent>    <A-h> :BufferPrevious<CR>
+nnoremap <silent>    <A-l> :BufferNext<CR>
 " Re-order to previous/next
 nnoremap <silent>    <A-<> :BufferMovePrevious<CR>
 nnoremap <silent>    <A->> :BufferMoveNext<CR>
