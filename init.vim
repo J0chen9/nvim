@@ -287,12 +287,6 @@ let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "[]",
 \  }
-function! NearestMethodOrFunction() abort
-	return get(b:, 'vista_nearest_method_or_function', '')
-endfunction
-set statusline+=%{NearestMethodOrFunction()}
-autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-
 " ==============================================================================
 " === fzf
 " ==============================================================================
@@ -446,12 +440,10 @@ nmap <silent> <leader>- <Plug>(coc-diagnostic-prev)
 nmap <silent> <leader>= <Plug>(coc-diagnostic-next)
   
 " 代码跳转，必备 跳转后你可以使用<C-o>跳回来
-nmap <silent> <C-b> <Plug>(coc-definition)		" 跳转到定义
-"nmap <silent> gd :set splitright<CR>:vs<CR><Plug>(coc-definition)
+nmap <silent> <C-b> :call CocActionAsync('jumpDefinition')<CR>
 nmap <silent> <A-t> <Plug>(coc-type-definition) " 跳转到类型定义
 nmap <silent> <A-i> <Plug>(coc-implementation)  " 跳转到实现
-nmap <silent> <A-r> <Plug>(coc-references)		" 跳转到引用
-
+nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
 
 " 使用 leader h 在预览窗口中看类型，方法文档
 nnoremap <silent> <leader>h :call <SID>show_documentation()<CR>

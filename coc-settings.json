@@ -38,7 +38,8 @@
 		"enumMember": "   (EnumMember)",
 		"default": "  "
 	},
-	"suggest.snippetIndicator": "🍦",
+	//"suggest.snippetIndicator": "🍦",
+	"suggest.snippetIndicator": "🍺",
 	//diagnostic
 	"diagnostic.displayByAle": false,
 	//	"diagnostic.refreshOnInsertMode": false,
@@ -90,7 +91,7 @@
 	"explorer.icon.expanded": "",
 	"explorer.icon.collapsed": "",
 	"explorer.openAction.strategy": "sourceWindow",
-	"explorer.width": 38,
+	"explorer.width": 50,
 	"explorer.sources": [
 		{
 			"name": "buffer",
@@ -114,9 +115,13 @@
 		}
 	},
 	"explorer.file.column.indent.indentLine": true,
+	"explorer.icon.source": "nvim-web-devicons",
+	"explorer.icon.enableNerdfont": true,
 	"explorer.file.showHiddenFiles": true,
 	"explorer.buffer.showHiddenBuffers": false,
 	"explorer.quitOnOpen": true,
+	"phpls.enable": true,
+	"intelephense.maxMemory": 3000,
 	"intelephense.licenceKey": "00WIX4YQOC6G943",
 	// php索引路径，这玩意用的就是phpstorm的那套
 	"intelephense.environment.includePaths": [
