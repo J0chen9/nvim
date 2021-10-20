@@ -42,8 +42,8 @@ set softtabstop=-1	" 按tab键输入的空格数量，softtabstop的值为负数
 set showmatch " 显示当前列匹配括号
 set relativenumber " 相对行号
 " 让空格和tab可见
-set list
-set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
+"set list
+"set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
 set hlsearch	" 高亮搜索
 set incsearch "auto match targets
@@ -123,6 +123,9 @@ inoremap <C-j> <Down>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
 
+" Move around tabs
+noremap <A--> :-tabnext<CR>
+noremap <A-=> :+tabnext<CR>
 " w!! 用sudo权限保存文件
 "cmap w!! %!sudo tee > /dev/null %
 
@@ -140,8 +143,7 @@ call plug#begin('$HOME/.config/nvim/plugged')
 Plug 'glepnir/dashboard-nvim'
 
 " statusline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
 
 "display
 Plug 'ryanoasis/vim-devicons'
@@ -150,9 +152,9 @@ Plug 'luochen1990/rainbow'
 " buffe line
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'akinsho/bufferline.nvim'
-Plug 'yggdroot/indentline'
 
-
+"=== 缩进线
+Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
 " colorscheme
 Plug 'w0ng/vim-hybrid'  " 不支持真色彩 
 Plug 'liuchengxu/space-vim-dark'
@@ -186,7 +188,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
 " go
 Plug 'fatih/vim-go'
-  
+ 
 " git
 " 在侧边栏显示本文件与当前git结点的不同之处
 Plug 'airblade/vim-gitgutter'
@@ -194,13 +196,13 @@ Plug 'airblade/vim-gitgutter'
 " 注释
 Plug '/tyru/caw.vim'
 
-" 浮动窗口  
-Plug 'voldikss/vim-floaterm' 
+" 浮动窗口
+Plug 'voldikss/vim-floaterm'
 
 "  代码标签
 Plug 'liuchengxu/vista.vim'
 
-" tool 
+" tool
 Plug 'hrsh7th/vim-eft'  " f t strong
 Plug 'rhysd/accelerated-jk' " faster jk
 
@@ -219,16 +221,16 @@ set background=dark
 
 "colorscheme hybrid
 
-colorschem doom-one
-let g:doom_one_terminal_colors = v:true
+"colorschem doom-one
+"let g:doom_one_terminal_colors = v:true
 "真色彩
 set termguicolors
 " 透明背景
 "hi Normal     ctermbg=NONE guibg=NONE
-hi LineNr     ctermbg=NONE guibg=NONE
+"hi LineNr     ctermbg=NONE guibg=NONE
 "hi SignColumn ctermbg=NONE guibg=NONE
 
-"colorscheme zephyr
+colorscheme zephyr
 " ================================= Plug Config=================================
 " ==============================================================================
 " === vim-sandwich
@@ -237,12 +239,35 @@ let g:textobj_sandwich_no_default_key_mappings = 1
 " ==============================================================================
 " === indentline
 " ==============================================================================
-let g:indentLine_enabled = 1
-let g:indentLine_char='┆'
-" 在以下文件不起作用
-let g:indentLine_fileTypeExclude = ['defx', 'denite','startify','tagbar','vista_kind','vista','coc-explorer','dashboard','php','go']
-let g:indentLine_concealcursor = 'niv'
-let g:indentLine_showFirstIndentLevel =1
+lua << EOF
+vim.g.indent_blankline_show_current_context = true
+vim.g.indent_blankline_context_patterns = {
+	'class',
+	'function',
+	'method',
+	'^if',
+	'^while',
+	'^typedef',
+	'^for',
+	'^object',
+	'^table',
+	'block',
+	'arguments',
+	'typedef',
+	'while',
+	'^public',
+	'return',
+	'if_statement',
+	'else_clause',
+	'jsx_element',
+	'jsx_self_closing_element',
+	'try_statement',
+	'catch_clause',
+	'import_statement'
+}
+vim.g.indent_blankline_char = '│'
+vim.g.indent_blankline_filetype_exclude = {'help','startify','defx', 'denite','startify','tagbar','vista_kind','vista','coc-explorer','dashboard'}
+EOF
 
 " ==============================================================================
 " === vim-interestingwords
@@ -289,7 +314,7 @@ nnoremap <A-f> <cmd>Telescope find_files<cr>
 nnoremap <A-F> <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>ft <cmd>Telescope help_tags<cr>
-nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
+nnoremap <leader>fh <cmd>Telescope oldfiles<cr>
 
 " ==============================================================================
 " === vim-floaterm
@@ -413,6 +438,7 @@ nmap <silent> <leader>= <Plug>(coc-diagnostic-next)
   
 " 代码跳转，必备 跳转后你可以使用<C-o>跳回来
 nmap <silent> <C-b> :call CocActionAsync('jumpDefinition')<CR>
+nmap <silent> gd :call CocActionAsync('jumpDefinition','tab drop')<CR>
 nmap <silent> <A-t> <Plug>(coc-type-definition) " 跳转到类型定义
 nmap <silent> <A-i> <Plug>(coc-implementation)  " 跳转到实现
 nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
@@ -433,9 +459,9 @@ endfunction
 nmap <F2> <Plug>(coc-rename)
 
 " Formatting selected code.
-nmap <Leader>l 	<Plug>(coc-format)
+nmap <Leader>l  <Plug>(coc-format)
 xmap <leader>f  <Plug>(coc-format-selected)
-      
+
 augroup mygroup
   autocmd!
   " Setup formatexpr specified filetype(s).
@@ -488,30 +514,6 @@ nnoremap <leader>3 :CocCommand<CR>
 nnoremap <silent><nowait> <leader>4  :<C-u>CocList diagnostics<cr>
 nnoremap <silent><nowait> <leader>5  :<C-u>CocList<cr>          
 nmap <leader>6 <Plug>(coc-refactor)
-" ==============================================================================
-" === eleline.vim/ airline
-" === https://github.com/liuchengxu/eleline.vim
-" ==============================================================================
-set laststatus=2
-"let g:airline_section_a = ''   " 模式
-" 使用coc-git的分支信息 g:coc_git_status including git branch and current project status.
-let g:airline_section_b = "%{get(g:,'coc_git_status','')}"   " 分支
-"let g:airline_section_c = ''		" 文件
-"let g:airline_section_x = ''		" 文件类型
-"let g:airline_section_y = ''		" 编码
-"let g:airline_section_z = ''		" 文本行信息
-let g:airline_section_error = ''
-let g:airline_section_warning  = ''
-
-" 美化
-let g:airline_powerline_fonts=1
-"let g:airline_theme = 'lucius' 
-let g:airline_theme = 'tomorrow' 
-" 左边圆柱 右边箭头
-let g:airline_left_sep = "\uE0B5"
-let g:airline_left_sep = "\uE0B4"
-"let g:airline_right_sep = "\uE0B7"
-"let g:airline_right_sep = "\uE0B6"
 " ==============================================================================
 " === https://github.com/akinsho/bufferline.nvim
 " ============================================================================== 
@@ -592,25 +594,12 @@ EOF
  " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
 let g:go_def_mapping_enabled = 0
-          
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
 let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
 let g:go_autodetect_gopath = 1
-let g:go_list_type = "quickfix"
-let g:go_version_warning = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_function_calls = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_generate_tags = 1
 
 let g:godef_split=2
-
-
 
 " ==============================================================================
 "=== tool
@@ -655,4 +644,12 @@ let g:dashboard_custom_header = [
       \'   ⠀⠀⠀⠈⠻⢧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣻⠿⠋⠀⠀⠀⠀⠀⠀  ',
       \'   ⠀⠀⠀⠀⠀⠀⠉⠓⠶⣤⣄⣀⡀⠀⠀⠀⠀⠀⢀⣀⣠⡴⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀  ',
       \ ]
+
+
+lua<< EOF
+require('line')
+-- 代码高亮
+require('treesitter')
+EOF
+
 
