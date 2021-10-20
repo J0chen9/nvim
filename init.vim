@@ -140,9 +140,6 @@ call plug#begin('$HOME/.config/nvim/plugged')
 Plug 'glepnir/dashboard-nvim'
 
 " statusline
-"Plug 'liuchengxu/eleline.vim'
-"Plug 'theniceboy/eleline.vim'
-"Plug 'ojroques/vim-scrollstatus'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
@@ -154,6 +151,7 @@ Plug 'luochen1990/rainbow'
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
 Plug 'akinsho/bufferline.nvim'
 Plug 'yggdroot/indentline'
+
 
 " colorscheme
 Plug 'w0ng/vim-hybrid'  " 不支持真色彩 
