@@ -32,7 +32,7 @@ source $HOME/.config/nvim/_machine_specific.vim
 " ============================================================================== 
 set number	" 设置行号
 syntax on	" 语法高亮
-"set clipboard=unnamed   " 鼠标复制到无名寄存器
+set clipboard=unnamed   " 鼠标复制到无名寄存器
 " tab默认显示宽度是8个空格，太丑了，要改一下
 set autoindent " 自动缩进
 set noexpandtab " 编辑输入Tab字符时,自动替换成空格
@@ -49,7 +49,6 @@ set hlsearch	" 高亮搜索
 set incsearch "auto match targets
 set showcmd " 命令模式下显示键入的指令
 set wildmenu " 命令行模式显示补全窗口,使用<Tab>和<S-Tab>来回移动进行补全
-" set wildmode=list:longest,full "将 显示可能匹配的文件列表，并使用最长的子串进行补全
 set foldmethod=indent	" 设置折叠方式
 set foldlevel=99	" 折叠等级
 set cursorline  "高亮当前行"
@@ -98,6 +97,9 @@ inoremap <A-a> <ESC>A
 " Disable the default s key
 noremap s <nop>
 
+" https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl
+vnoremap y <C-C>
+
 " split the screens to up (horizontal), down (horizontal), left (vertical), right (vertical)
 noremap su :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
 noremap se :set splitbelow<CR>:split<CR>
@@ -121,11 +123,6 @@ inoremap <C-j> <Down>
 inoremap <C-h> <Left>
 inoremap <C-l> <Right>
 
-" 快速移动
-noremap J 5j
-noremap K 5k
-
-
 " w!! 用sudo权限保存文件
 "cmap w!! %!sudo tee > /dev/null %
 
@@ -140,8 +137,7 @@ noremap <LEADER>q <C-w>j:q<CR>
 " === Install Plugins with Vim-Plug
 " ==============================================================================
 call plug#begin('$HOME/.config/nvim/plugged')
-" 安装插件只需要把github后缀地址放这里,重启后在vim命令行模式执行: PlugInstall 就ojbk了
-Plug 'mhinz/vim-startify'
+Plug 'glepnir/dashboard-nvim'
 
 " statusline
 "Plug 'liuchengxu/eleline.vim'
@@ -156,18 +152,18 @@ Plug 'luochen1990/rainbow'
 
 " buffe line
 Plug 'kyazdani42/nvim-web-devicons' " Recommended (for coloured icons)
-Plug 'romgrk/barbar.nvim'
-
+Plug 'akinsho/bufferline.nvim'
 Plug 'yggdroot/indentline'
 
 " colorscheme
 Plug 'w0ng/vim-hybrid'  " 不支持真色彩 
 Plug 'liuchengxu/space-vim-dark'
 Plug 'romgrk/doom-one.vim'
-
-" fzf.vim 文件搜索工具，需要下载命令行搜索工具fzf
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+Plug 'glepnir/zephyr-nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
+" fuzzy finder 
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'airblade/vim-rooter'
 
 " 批量替换插件
@@ -206,8 +202,11 @@ Plug 'voldikss/vim-floaterm'
 "  代码标签
 Plug 'liuchengxu/vista.vim'
 
+" tool 
+Plug 'hrsh7th/vim-eft'  " f t strong
+Plug 'rhysd/accelerated-jk' " faster jk
+
 call plug#end()
-  
   
 " ==============================================================================
 " === vim主题
@@ -224,14 +223,14 @@ set background=dark
 
 colorschem doom-one
 let g:doom_one_terminal_colors = v:true
-
-" 真色彩
+"真色彩
 set termguicolors
 " 透明背景
 "hi Normal     ctermbg=NONE guibg=NONE
-"hi LineNr     ctermbg=NONE guibg=NONE
+hi LineNr     ctermbg=NONE guibg=NONE
 "hi SignColumn ctermbg=NONE guibg=NONE
 
+"colorscheme zephyr
 " ================================= Plug Config=================================
 " ==============================================================================
 " === vim-sandwich
@@ -270,7 +269,6 @@ let g:vista_disable_statusline = 1
 let g:vista_default_executive = 'ctags' " brew install universal-ctags 
 let g:vista_cursor_delay=100
 let g:vista_close_on_jump=1
-let g:vista_close_on_fzf_select=1
 let g:vista_vimwiki_executive = 'markdown'
 let g:vista_executive_for = {
   \ 'vimwiki': 'markdown',
@@ -281,8 +279,6 @@ let g:vista_executive_for = {
   \ 'python': 'coc',
   \ }
 let g:vista_fzf_preview = ['right:50%']
-" / 使用fzf 查找
-autocmd FileType vista,vista_kind nnoremap <buffer> <silent> / :<c-u>call vista#finder#fzf#Run()<CR>
 let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "[]",
@@ -290,35 +286,13 @@ let g:vista#renderer#icons = {
 " ==============================================================================
 " === fzf
 " ==============================================================================
-nnoremap <silent> <A-f> :Rg <C-R><C-W><CR>
-nnoremap <silent> <A-F> :Rg<CR>
-" 搜索文件
-nnoremap <silent> <c-p> :Files<CR>
-nnoremap <silent> <c-h> :History<CR>
+" Find files using Telescope command-line sugar.
+nnoremap <A-f> <cmd>Telescope find_files<cr>
+nnoremap <A-F> <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>ft <cmd>Telescope help_tags<cr>
+nnoremap <leader>fo <cmd>Telescope oldfiles<cr>
 
-let g:fzf_preview_window = 'right:50%'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! BD call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-\ }))
-" 呼出关闭BUFFER的窗口
-noremap <leader>d :BD<CR>
-
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 " ==============================================================================
 " === vim-floaterm
 " ==============================================================================
@@ -463,7 +437,6 @@ nmap <F2> <Plug>(coc-rename)
 " Formatting selected code.
 nmap <Leader>l 	<Plug>(coc-format)
 xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
       
 augroup mygroup
   autocmd!
@@ -517,125 +490,6 @@ nnoremap <leader>3 :CocCommand<CR>
 nnoremap <silent><nowait> <leader>4  :<C-u>CocList diagnostics<cr>
 nnoremap <silent><nowait> <leader>5  :<C-u>CocList<cr>          
 nmap <leader>6 <Plug>(coc-refactor)
-
-" ==============================================================================
-" === barbar.nvim   下面这两个nvim的buffer插件都很好
-" === https://github.com/romgrk/barbar.nvim
-" === https://github.com/akinsho/bufferline.nvim
-" ============================================================================== 
-"================key mapping==================
-" Move to previous/next
-nnoremap <silent>    <A-h> :BufferPrevious<CR>
-nnoremap <silent>    <A-l> :BufferNext<CR>
-" Re-order to previous/next
-nnoremap <silent>    <A-<> :BufferMovePrevious<CR>
-nnoremap <silent>    <A->> :BufferMoveNext<CR>
-" Goto buffer in position...
-nnoremap <silent>    <A-1> :BufferGoto 1<CR>
-nnoremap <silent>    <A-2> :BufferGoto 2<CR>
-nnoremap <silent>    <A-3> :BufferGoto 3<CR>
-nnoremap <silent>    <A-4> :BufferGoto 4<CR>
-nnoremap <silent>    <A-5> :BufferGoto 5<CR>
-nnoremap <silent>    <A-6> :BufferGoto 6<CR>
-nnoremap <silent>    <A-7> :BufferGoto 7<CR>
-nnoremap <silent>    <A-8> :BufferGoto 8<CR>
-nnoremap <silent>    <A-9> :BufferLast<CR>
-" Magic buffer-picking mode
-   nnoremap <silent> <A-s>    :BufferPick<CR>
-" Pin/unpin buffer
-" Close buffer
-nnoremap <silent>    <A-c> :BufferClose<CR>
-" Wipeout buffer
-"                          :BufferWipeout<CR>
-" Close commands
-nnoremap <silent> <Space>bw :BufferCloseAllButCurrent<CR>
-"                          :BufferCloseAllButPinned<CR>
-"                          :BufferCloseBuffersLeft<CR>
-"                          :BufferCloseBuffersRight<CR>
-" Sort automatically by...
-nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
-"nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-"nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-"nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
-
-" Other:
-" :BarbarEnable - enables barbar (enabled by default)
-" :BarbarDisable - very bad command, should never be used
-
-"==============option=================== 
-" NOTE: If barbar's option dict isn't created yet, create it
-let bufferline = get(g:, 'bufferline', {})
-
-" New tabs are opened next to the currently selected tab.
-" Enable to insert them in buffer number order.
-let bufferline.add_in_buffer_number_order = v:false
-
-" Enable/disable animations
-let bufferline.animation = v:true
-
-" Enable/disable auto-hiding the tab bar when there is a single buffer
-let bufferline.auto_hide = v:false
-
-" Enable/disable current/total tabpages indicator (top right corner)
-let bufferline.tabpages = v:true
-
-" Enable/disable close button
-let bufferline.closable = v:true
-
-" Enables/disable clickable tabs
-"  - left-click: go to buffer
-"  - middle-click: delete buffer
-let bufferline.clickable = v:true
-
-" Excludes buffers from the tabline
-let bufferline.exclude_ft = ['javascript']
-let bufferline.exclude_name = ['package.json']
-
-" Enable/disable icons
-" if set to 'buffer_number', will show buffer number in the tabline
-" if set to 'numbers', will show buffer index in the tabline
-" if set to 'both', will show buffer index and icons in the tabline
-let bufferline.icons = v:true
-
-" Sets the icon's highlight group.
-" If false, will use nvim-web-devicons colors
-let bufferline.icon_custom_colors = v:false
-
-" Configure icons on the bufferline.
-let bufferline.icon_separator_active = '▎'
-let bufferline.icon_separator_inactive = '▎'
-let bufferline.icon_close_tab = ''
-let bufferline.icon_close_tab_modified = '●'
-let bufferline.icon_pinned = '車'
-
-" If true, new buffers will be inserted at the start/end of the list.
-" Default is to insert after current buffer.
-let bufferline.insert_at_start = v:false
-let bufferline.insert_at_end = v:false
-
-" Sets the maximum padding width with which to surround each tab.
-let bufferline.maximum_padding = 3
-
-" Sets the maximum buffer name length.
-let bufferline.maximum_length = 30
-
-" If set, the letters for each buffer in buffer-pick mode will be
-" assigned based on their name. Otherwise or in case all letters are
-" already assigned, the behavior is to assign letters in order of
-" usability (see order below)
-let bufferline.semantic_letters = v:true
-
-" New buffer letters are assigned in this order. This order is
-" optimal for the qwerty keyboard layout but might need adjustement
-" for other layouts.
-let bufferline.letters =
-  \ 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP'
-
-" Sets the name of unnamed buffers. By default format is "[Buffer X]"
-" where X is the buffer number. But only a static string is accepted here.
-let bufferline.no_name_title = v:null
-
-               
 " ==============================================================================
 " === eleline.vim/ airline
 " === https://github.com/liuchengxu/eleline.vim
@@ -660,7 +514,82 @@ let g:airline_left_sep = "\uE0B5"
 let g:airline_left_sep = "\uE0B4"
 "let g:airline_right_sep = "\uE0B7"
 "let g:airline_right_sep = "\uE0B6"
-" vim-go 插件
+" ==============================================================================
+" === https://github.com/akinsho/bufferline.nvim
+" ============================================================================== 
+nnoremap <silent><A-l> :BufferLineCycleNext<CR>
+nnoremap <silent><A-h> :BufferLineCyclePrev<CR>
+nnoremap  <silent><A-s> :BufferLinePick <CR>
+let g:airline#extensions#tabline#enabled = 0
+lua << EOF
+require('bufferline').setup {
+  options = {
+    numbers = "ordinal",
+    close_command = "bdelete! %d",       -- can be a string | function, see "Mouse actions"
+    right_mouse_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
+    left_mouse_command = "buffer %d",    -- can be a string | function, see "Mouse actions"
+    middle_mouse_command = nil,          -- can be a string | function, see "Mouse actions"
+    -- NOTE: this plugin is designed with this icon in mind,
+    -- and so changing this is NOT recommended, this is intended
+    -- as an escape hatch for people who cannot bear it for whatever reason
+    indicator_icon = '▎',
+    buffer_close_icon = '',
+    modified_icon = '●',
+    close_icon = '',
+    left_trunc_marker = '',
+    right_trunc_marker = '',
+    --- name_formatter can be used to change the buffer's label in the bufferline.
+    --- Please note some names can/will break the
+    --- bufferline so use this at your discretion knowing that it has
+    --- some limitations that will *NOT* be fixed.
+    name_formatter = function(buf)  -- buf contains a "name", "path" and "bufnr"
+      -- remove extension from markdown files for example
+      if buf.name:match('%.md') then
+        return vim.fn.fnamemodify(buf.name, ':t:r')
+      end
+    end,
+    max_name_length = 18,
+    max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
+    tab_size = 18,
+    diagnostics = "coc",
+    diagnostics_update_in_insert = false,
+    diagnostics_indicator = function(count, level, diagnostics_dict, context)
+      return "("..count..")"
+    end,
+    -- NOTE: this will be called a lot so don't do any heavy processing here
+    custom_filter = function(buf_number)
+      -- filter out filetypes you don't want to see
+      if vim.bo[buf_number].filetype ~= "<i-dont-want-to-see-this>" then
+        return true
+      end
+      -- filter out by buffer name
+      if vim.fn.bufname(buf_number) ~= "<buffer-name-I-dont-want>" then
+        return true
+      end
+      -- filter out based on arbitrary rules
+      -- e.g. filter out vim wiki buffer from tabline in your work repo
+      if vim.fn.getcwd() == "<work-repo>" and vim.bo[buf_number].filetype ~= "wiki" then
+        return true
+      end
+    end,
+    offsets = {{filetype = "coc-explorer", text = "File Explorer", text_align =  " left " ,text_align = "left"}},
+    show_buffer_icons = true, -- disable filetype icons for buffers
+    show_buffer_close_icons = true,
+    show_close_icon = true,
+    show_tab_indicators = true,
+    persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+    -- can also be a table containing 2 custom separators
+    -- [focused and unfocused]. eg: { '|', '|' }
+    separator_style = "slant",
+    enforce_regular_tabs = true,
+    always_show_bufferline = true,
+    sort_by = 'id'      -- add custom logic
+  }
+}
+EOF
+
+"==============================================================================
+"=== vim-go 插件
 "==============================================================================
  " disable vim-go :GoDef short cut (gd)
 " this is handled by LanguageClient [LC]
@@ -682,3 +611,50 @@ let g:go_highlight_methods = 1
 let g:go_highlight_generate_tags = 1
 
 let g:godef_split=2
+
+
+
+" ==============================================================================
+"=== tool
+"==============================================================================
+nmap j <Plug>(accelerated_jk_gj)
+nmap k <Plug>(accelerated_jk_gk)
+
+nmap ; <Plug>(eft-repeat)
+xmap ; <Plug>(eft-repeat)
+
+nmap f <Plug>(eft-f)
+xmap f <Plug>(eft-f)
+omap f <Plug>(eft-f)
+nmap F <Plug>(eft-F)
+xmap F <Plug>(eft-F)
+omap F <Plug>(eft-F)
+  
+nmap t <Plug>(eft-t)
+xmap t <Plug>(eft-t)
+omap t <Plug>(eft-t)
+nmap T <Plug>(eft-T)
+xmap T <Plug>(eft-T)
+omap T <Plug>(eft-T)
+
+
+let g:dashboard_default_executive ="telescope"
+let g:dashboard_custom_header = [
+      \'     ⠀⠀⠀⠀⠀⠀⠀⡴⠞⠉⢉⣭⣿⣿⠿⣳⣤⠴⠖⠛⣛⣿⣿⡷⠖⣶⣤⡀⠀⠀⠀  ',
+      \'   ⠀⠀⠀⠀⠀⠀⠀⣼⠁⢀⣶⢻⡟⠿⠋⣴⠿⢻⣧⡴⠟⠋⠿⠛⠠⠾⢛⣵⣿⠀⠀⠀⠀  ',
+      \'   ⣼⣿⡿⢶⣄⠀⢀⡇⢀⡿⠁⠈⠀⠀⣀⣉⣀⠘⣿⠀⠀⣀⣀⠀⠀⠀⠛⡹⠋⠀⠀⠀⠀  ',
+      \'   ⣭⣤⡈⢑⣼⣻⣿⣧⡌⠁⠀⢀⣴⠟⠋⠉⠉⠛⣿⣴⠟⠋⠙⠻⣦⡰⣞⠁⢀⣤⣦⣤⠀  ',
+      \'   ⠀⠀⣰⢫⣾⠋⣽⠟⠑⠛⢠⡟⠁⠀⠀⠀⠀⠀⠈⢻⡄⠀⠀⠀⠘⣷⡈⠻⣍⠤⢤⣌⣀  ',
+      \'   ⢀⡞⣡⡌⠁⠀⠀⠀⠀⢀⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⢿⡀⠀⠀⠀⠸⣇⠀⢾⣷⢤⣬⣉  ',
+      \'   ⡞⣼⣿⣤⣄⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⣿⠀⠸⣿⣇⠈⠻  ',
+      \'   ⢰⣿⡿⢹⠃⠀⣠⠤⠶⣼⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⡇⠀⠀⠀⠀⣿⠀⠀⣿⠛⡄⠀  ',
+      \'   ⠈⠉⠁⠀⠀⠀⡟⡀⠀⠈⡗⠲⠶⠦⢤⣤⣤⣄⣀⣀⣸⣧⣤⣤⠤⠤⣿⣀⡀⠉⣼⡇⠀  ',
+      \'   ⣿⣴⣴⡆⠀⠀⠻⣄⠀⠀⠡⠀⠀⠀⠈⠛⠋⠀⠀⠀⡈⠀⠻⠟⠀⢀⠋⠉⠙⢷⡿⡇⠀  ',
+      \'   ⣻⡿⠏⠁⠀⠀⢠⡟⠀⠀⠀⠣⡀⠀⠀⠀⠀⠀⢀⣄⠀⠀⠀⠀⢀⠈⠀⢀⣀⡾⣴⠃⠀  ',
+      \'   ⢿⠛⠀⠀⠀⠀⢸⠁⠀⠀⠀⠀⠈⠢⠄⣀⠠⠼⣁⠀⡱⠤⠤⠐⠁⠀⠀⣸⠋⢻⡟⠀⠀  ',
+      \'   ⠈⢧⣀⣤⣶⡄⠘⣆⠀⠀⠀⠀⠀⠀⠀⢀⣤⠖⠛⠻⣄⠀⠀⠀⢀⣠⡾⠋⢀⡞⠀⠀⠀  ',
+      \'   ⠀⠀⠻⣿⣿⡇⠀⠈⠓⢦⣤⣤⣤⡤⠞⠉⠀⠀⠀⠀⠈⠛⠒⠚⢩⡅⣠⡴⠋⠀⠀⠀⠀  ',
+      \'   ⠀⠀⠀⠈⠻⢧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⣻⠿⠋⠀⠀⠀⠀⠀⠀  ',
+      \'   ⠀⠀⠀⠀⠀⠀⠉⠓⠶⣤⣄⣀⡀⠀⠀⠀⠀⠀⢀⣀⣠⡴⠖⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀  ',
+      \ ]
+

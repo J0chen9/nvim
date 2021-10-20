@@ -127,5 +127,10 @@
 	"intelephense.environment.includePaths": [
 		"/home/jochen/workspace/php/"
 	],
-	"intelephense.environment.phpVersion": "7.0"
+	"intelephense.environment.phpVersion": "7.0",
+	"translator.engines": [
+		"bing",
+		"youdao",
+		"haici"
+	]
 }
