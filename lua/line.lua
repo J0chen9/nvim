@@ -116,6 +116,7 @@ gls.left[2] = {
           i = '▋ ',
           c= '▋ ',
           V= '▋ ',
+          ['\22']= '▋ ',
           [''] = '▋ ',
           v ='▋ ',
           c  = '▋ ',
@@ -134,6 +135,7 @@ gls.left[2] = {
           n = colors.green,
           i = colors.blue,v=colors.magenta,[''] = colors.blue,V=colors.blue,
           c = colors.red,no = colors.magenta,s = colors.orange,S=colors.orange,
+        ['\22'] = 'gray',
           [''] = colors.orange,ic = colors.yellow,R = colors.purple,Rv = colors.purple,
           cv = colors.red,ce=colors.red, r = colors.cyan,rm = colors.cyan, ['r?'] = colors.cyan,
           ['!']  = colors.green,t = colors.green,
@@ -189,7 +191,7 @@ gls.left[6] = {
 
 gls.left[7] = {
   GitIcon = {
-    provider = function() return ' ﯙ ' end,
+    provider = function() return ' 🥚' end,
     condition = require('galaxyline.provider_vcs').check_git_workspace,
     highlight = {colors.orange,colors.line_bg},
   }
@@ -214,7 +216,8 @@ gls.left[9] = {
   DiffAdd = {
     provider = 'DiffAdd',
     condition = checkwidth,
-    icon = ' ',
+    --icon = '  ',
+    icon = ' ➕',
     highlight = {colors.green,colors.line_bg},
   }
 }
@@ -222,7 +225,8 @@ gls.left[10] = {
   DiffModified = {
     provider = 'DiffModified',
     condition = checkwidth,
-    icon = ' ',
+    --icon = '  ',
+    icon = ' 🔪',
     highlight = {colors.orange,colors.line_bg},
   }
 }
@@ -230,7 +234,8 @@ gls.left[11] = {
   DiffRemove = {
     provider = 'DiffRemove',
     condition = checkwidth,
-    icon = '  ',
+    --icon = '  ',
+    icon = ' ➖',
     highlight = {colors.red,colors.line_bg},
   }
 }
@@ -248,7 +253,8 @@ gls.left[12] = {
 gls.left[13] = {
     TrailingWhiteSpace = {
      provider = TrailingWhiteSpace,
-     icon = '   ',
+     --icon = '   ',
+     icon = '  🩹 ',
      highlight = {colors.yellow,colors.bg},
     }
 }
@@ -333,6 +339,7 @@ gls.short_line_left[1] = {
           i = '▋ ',
           c= '▋ ',
           V= '▋ ',
+          ['\22']= '▋ ',
           [''] = '▋ ',
           v ='▋ ',
           c  = '▋ ',
@@ -350,6 +357,7 @@ gls.short_line_left[1] = {
       local mode_color = {
           n = colors.green,
           i = colors.blue,v=colors.magenta,[''] = colors.blue,V=colors.blue,
+		  ['\22'] = 'gray',
           c = colors.red,no = colors.magenta,s = colors.orange,S=colors.orange,
           [''] = colors.orange,ic = colors.yellow,R = colors.purple,Rv = colors.purple,
           cv = colors.red,ce=colors.red, r = colors.cyan,rm = colors.cyan, ['r?'] = colors.cyan,

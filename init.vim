@@ -42,8 +42,8 @@ set softtabstop=-1	" 按tab键输入的空格数量，softtabstop的值为负数
 set showmatch " 显示当前列匹配括号
 set relativenumber " 相对行号
 " 让空格和tab可见
-"set list
-"set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
+set list
+set listchars=tab:»·,nbsp:+,trail:·,extends:→,precedes:←
 
 set hlsearch	" 高亮搜索
 set incsearch "auto match targets
@@ -145,7 +145,6 @@ Plug 'glepnir/dashboard-nvim'
 Plug 'glepnir/galaxyline.nvim' , {'branch': 'main'}
 
 "display
-Plug 'ryanoasis/vim-devicons'
 Plug 'luochen1990/rainbow'
 
 " buffe line
@@ -162,7 +161,11 @@ Plug 'nvim-treesitter/nvim-treesitter'
 " fuzzy finder 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'fannheyward/telescope-coc.nvim'
 Plug 'airblade/vim-rooter'
+"Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
+"Plug 'junegunn/fzf.vim' " needed for previews
+"Plug 'antoinemadec/coc-fzf'
 
 " 批量替换插件
 Plug 'brooth/far.vim'
@@ -212,23 +215,18 @@ call plug#end()
 " 背景主题(用插件下载的主题需要在这里配置使用，否则会报错)
 set background=dark
 
-
-"colorscheme hybrid
+colorscheme hybrid
 
 "colorschem doom-one
 "let g:doom_one_terminal_colors = v:true
 "真色彩
 set termguicolors
-" 设置批注斜体
-highlight Comment gui=italic 
-" 设置关键字斜体
-hi Identifier cterm=italic gui=italic
 
 " 透明背景
 "hi Normal     ctermbg=NONE guibg=NONE
 "hi LineNr     ctermbg=NONE guibg=NONE
 "hi SignColumn ctermbg=NONE guibg=NONE
-colorscheme zephyr
+"colorscheme zephyr
 
 "=== 光标设置
 autocmd InsertEnter * set guicursor=a:blinkon1,i:ver35-Cursor
@@ -320,21 +318,20 @@ let g:vista_executive_for = {
   \ 'go': 'coc',
   \ 'python': 'coc',
   \ }
-let g:vista_fzf_preview = ['right:50%']
 let g:vista#renderer#icons = {
 \   "function": "\uf794",
 \   "variable": "[]",
 \  }
 " ==============================================================================
-" === fzf
+" === telescope
 " ==============================================================================
 " Find files using Telescope command-line sugar.
-nnoremap <A-f> <cmd>Telescope find_files<cr>
+nnoremap <C-p> <cmd>Telescope find_files<cr>
+nnoremap <A-f> <cmd>Telescope current_buffer_fuzzy_find<cr>
 nnoremap <A-F> <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>ft <cmd>Telescope help_tags<cr>
 nnoremap <leader>fh <cmd>Telescope oldfiles<cr>
-
 " ==============================================================================
 " === vim-floaterm
 " ==============================================================================
@@ -404,6 +401,7 @@ let g:coc_global_extensions = [
 			\ 'coc-vimlsp',
 			\ 'coc-json',
 			\ 'coc-protobuf',
+			\ 'coc-yank',
 			\ 'coc-go',
 			\ 'coc-phpls',
 			\ 'coc-python',
@@ -414,7 +412,7 @@ let g:coc_global_extensions = [
     		\ 'coc-emoji',
     		\ 'coc-explorer',
 			\ 'coc-translator',
-  			\ 'coc-pairs',
+ 			\ 'coc-pairs',
   			\ 'coc-syntax',
 			\ 'coc-snippets']
 
@@ -457,10 +455,16 @@ nmap <silent> <leader>= <Plug>(coc-diagnostic-next)
   
 " 代码跳转，必备 跳转后你可以使用<C-o>跳回来
 nmap <silent> <C-b> :call CocActionAsync('jumpDefinition')<CR>
+"nmap <silent> <C-b> :Telescope coc definitions<CR>
 nmap <silent> gd :call CocActionAsync('jumpDefinition','tab drop')<CR>
+"nmap <silent> gd :call CocActionAsync('jumpDefinition','tab drop')<CR>
 nmap <silent> <A-t> <Plug>(coc-type-definition) " 跳转到类型定义
+"nmap <silent> <A-t> :Telescope coc type_definitions<CR> " 跳转到类型定义
 nmap <silent> <A-i> <Plug>(coc-implementation)  " 跳转到实现
-nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
+"nmap <silent> <A-i> :Telescope coc implementations" 跳转到实现
+"nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
+"nmap <silent> <A-r> <Plug>(coc-references)
+nmap <silent> <A-r> :Telescope coc references<CR>
 
 " 使用 leader h 在预览窗口中看类型，方法文档
 nnoremap <silent> <leader>h :call <SID>show_documentation()<CR>
@@ -489,6 +493,12 @@ augroup mygroup
   autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
 augroup end
 
+inoremap <silent><expr> <C-j> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<C-j>"
+inoremap <silent><expr> <C-k> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<C-k>"
+nmap <C-l>f <Plug>(coc-fix-current)
+nmap <C-l>h <Plug>(coc-float-hide)
+nmap <C-l>j <Plug>(coc-float-jump)
+
 " Text Objects 块映射和可视模式映射
 xmap if <Plug>(coc-funcobj-i)
 xmap af <Plug>(coc-funcobj-a)
@@ -511,16 +521,6 @@ nmap <leader>aw  <Plug>(coc-codeaction-selected)w
 nmap <leader>ac  <Plug>(coc-codeaction)
 nmap <leader>.  :CocAction<CR>
 
-" coc-git 状态栏还是用gitgutter的
-" navigate chunks of current buffer
-"nmap <LEADER>g- <Plug>(coc-git-prevchunk)
-"nmap <LEADER>g= <Plug>(coc-git-nextchunk)
-" 查看当前行具体更改信息
-"nmap <LEADER>gh <Plug>(coc-git-chunkinfo)
-" show commit contains current position
-" nmap <LEADER>gc <Plug>(coc-git-commit)
-" 折叠所有未更改的行
-"nnoremap <LEADER>gf :CocCommand git.foldUnchanged<CR>
 autocmd User CocGitStatusChange {command}              
 
 " coc-explorer
@@ -529,10 +529,11 @@ nnoremap <space>e :CocCommand explorer<CR>
 nmap <Leader>1 <Plug>(coc-translator-p)
 vmap <Leader>1 <Plug>(coc-translator-pv)
 nnoremap <leader>2 :noh<cr>
-nnoremap <leader>3 :CocCommand<CR>
-nnoremap <silent><nowait> <leader>4  :<C-u>CocList diagnostics<cr>
+nnoremap <leader>3 :Telescope coc commands<CR>
+nnoremap <silent><nowait> <leader>4  :<C-u>:Telescope coc diagnostics<cr>
 nnoremap <silent><nowait> <leader>5  :<C-u>CocList<cr>          
 nmap <leader>6 <Plug>(coc-refactor)
+nnoremap <silent><space>y  :<C-u>CocList -A --normal yank<cr>
 " ==============================================================================
 " === https://github.com/akinsho/bufferline.nvim
 " ============================================================================== 
@@ -617,7 +618,15 @@ let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
 let g:go_fmt_command = "goimports" " 格式化将默认的 gofmt 替换
 let g:go_autodetect_gopath = 1
-
+let g:go_version_warning = 1
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_function_calls = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_generate_tags = 1
 let g:godef_split=2
 
 " ==============================================================================
@@ -669,6 +678,9 @@ lua<< EOF
 require('line')
 -- 代码高亮
 require('treesitter')
+-- 集成coc
+require('telescope').load_extension('coc')
+
 EOF
 
 
