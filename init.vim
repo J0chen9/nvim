@@ -195,7 +195,7 @@ Plug 'fatih/vim-go'
 Plug 'airblade/vim-gitgutter'
   
 " 注释
-Plug '/tyru/caw.vim'
+Plug 'b3nj5m1n/kommentary'
 
 " 浮动窗口
 Plug 'voldikss/vim-floaterm'
@@ -385,9 +385,9 @@ vnoremap <silent> <leader>r :Farr<cr>
 nmap ss <Plug>(easymotion-s2)
 
 " ==============================================================================
-" === commentary.vim 代码注释  https://github.com/tyru/caw.vim
-" === gci/a/o注释
+" === kommentary代码注释  https://github.com/b3nj5m1n/kommentary
 " ============================================================================== 
+
 
 
 " ==============================================================================
