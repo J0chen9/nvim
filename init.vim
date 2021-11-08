@@ -35,7 +35,7 @@ syntax on	" 语法高亮
 set clipboard=unnamed   " 鼠标复制到无名寄存器
 " tab默认显示宽度是8个空格，太丑了，要改一下
 set autoindent " 自动缩进
-set noexpandtab " 编辑输入Tab字符时,自动替换成空格
+set expandtab " 编辑输入Tab字符时,自动替换成空格
 set shiftwidth=4  " 自动缩进时,缩进长度为4
 set tabstop=4 " tab的长度，4个空格表示1个tab
 set softtabstop=-1	" 按tab键输入的空格数量，softtabstop的值为负数,会使用shiftwidth的值,两者保持一致,方便统一缩进
@@ -100,10 +100,10 @@ noremap s <nop>
 " https://github.com/neovim/neovim/wiki/FAQ#how-to-use-the-windows-clipboard-from-wsl
 vnoremap <C-C> y
 " split the screens to up (horizontal), down (horizontal), left (vertical), right (vertical)
-noremap su :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
-noremap se :set splitbelow<CR>:split<CR>
-noremap sn :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
-noremap si :set splitright<CR>:vsplit<CR>
+noremap sk :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
+noremap sj :set splitbelow<CR>:split<CR>
+noremap sh :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
+noremap sj :set splitright<CR>:vsplit<CR>
 " Spelling Check with <space>sc
 noremap <LEADER>sc :set spell!<CR>
 
@@ -161,11 +161,12 @@ Plug 'nvim-treesitter/nvim-treesitter'
 " fuzzy finder 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 Plug 'fannheyward/telescope-coc.nvim'
 Plug 'airblade/vim-rooter'
-"Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
-"Plug 'junegunn/fzf.vim' " needed for previews
-"Plug 'antoinemadec/coc-fzf'
+Plug 'junegunn/fzf', {'dir': '~/.fzf','do': './install --all'}
+Plug 'junegunn/fzf.vim' " needed for previews
+Plug 'antoinemadec/coc-fzf'
 
 " 批量替换插件
 Plug 'brooth/far.vim'
@@ -197,8 +198,11 @@ Plug 'airblade/vim-gitgutter'
 " 注释
 Plug 'b3nj5m1n/kommentary'
 
-" 浮动窗口
-Plug 'voldikss/vim-floaterm'
+" float term tool
+Plug 'kdheepak/lazygit.nvim'
+Plug 'francoiscabrol/ranger.vim'
+Plug 'rbgrouleff/bclose.vim' " depened by ranger.vim
+Plug 'akinsho/toggleterm.nvim'
 
 "  代码标签
 Plug 'liuchengxu/vista.vim'
@@ -233,9 +237,6 @@ autocmd InsertEnter * set guicursor=a:blinkon1,i:ver35-Cursor
 autocmd InsertLeave * set guicursor=i:ver35-Cursor
 autocmd VimLeave  * set gcr=n-v-c:ver25-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor,a:blinkon1a
 
-"== 缩进线
-" 背景色
-" 前景色
 "== 自动清空命令输出
 function! s:empty_message(timer)
   if mode() ==# 'n'
@@ -253,6 +254,7 @@ augroup END
 " === vim-sandwich
 " ==============================================================================
 let g:textobj_sandwich_no_default_key_mappings = 1 
+
 " ==============================================================================
 " === indentline
 " ==============================================================================
@@ -326,29 +328,12 @@ let g:vista#renderer#icons = {
 " === telescope
 " ==============================================================================
 " Find files using Telescope command-line sugar.
-nnoremap <C-p> <cmd>Telescope find_files<cr>
-nnoremap <A-f> <cmd>Telescope current_buffer_fuzzy_find<cr>
-nnoremap <A-F> <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>ft <cmd>Telescope help_tags<cr>
-nnoremap <leader>fh <cmd>Telescope oldfiles<cr>
-" ==============================================================================
-" === vim-floaterm
-" ==============================================================================
-let g:floaterm_keymap_kill = '<F4>'
-" 推荐这样映射更灵活
-nnoremap <silent> <Leader>ot :FloatermToggle<CR>
-tnoremap <silent> <Leader>ot <C-\><C-n>:FloatermToggle<CR>
-" 打开lazygit
-nnoremap <silent> <Leader>og :<C-u>FloatermNew --height=0.85 --width=0.8 lazygit<CR>
-
-" 窗口的设置
-let g:floaterm_position = 'center'
-let g:floaterm_wintype = 'floating'
-" Set floaterm window's background to black
-"hi Floaterm guibg=black
-" Set floating window border line color to cyan, and background to orange
-hi FloatermBorder guibg=none guifg=cyan
+nnoremap <C-p> <cmd>Telescope find_files theme=dropdown prompt_prefix=🔍<cr>
+nnoremap <A-f> <cmd>Telescope current_buffer_fuzzy_find rompt_prefix=🔍<cr>
+nnoremap <A-F> <cmd>Telescope live_grep  prompt_prefix=🔍<cr>
+nnoremap <leader>fb <cmd>Telescope buffers  prompt_prefix=🔍<cr>
+nnoremap <leader>ft <cmd>Telescope help_tags  prompt_prefix=🔍<cr>
+nnoremap <leader>fh <cmd>Telescope oldfiles theme=dropdown prompt_prefix=🔍<cr>
 
 " ==============================================================================
 " == GitGutter
@@ -388,8 +373,21 @@ nmap ss <Plug>(easymotion-s2)
 " === kommentary代码注释  https://github.com/b3nj5m1n/kommentary
 " ============================================================================== 
 
+" ==============================================================================
+" == term tool (ranger lazygit)
+" ============================================================================== 
+" ranger
+let g:ranger_map_keys = 0
+map <leader>or :Ranger<CR>
+let g:ranger_replace_netrw = 1 " open ranger when vim open a directory
 
-
+" lazygit
+nnoremap <silent> <leader>gg :LazyGit<CR>
+let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
+let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
+let g:lazygit_floating_window_use_plenary = 1 " use plenary.nvim to manage floating window if available
+let g:lazygit_use_neovim_remote = 0 " fallback to 0 if neovim-remote is not installed
 " ==============================================================================
 " === coc.nvim
 " ==============================================================================
@@ -462,9 +460,9 @@ nmap <silent> <A-t> <Plug>(coc-type-definition) " 跳转到类型定义
 "nmap <silent> <A-t> :Telescope coc type_definitions<CR> " 跳转到类型定义
 nmap <silent> <A-i> <Plug>(coc-implementation)  " 跳转到实现
 "nmap <silent> <A-i> :Telescope coc implementations" 跳转到实现
-"nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
+nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
 "nmap <silent> <A-r> <Plug>(coc-references)
-nmap <silent> <A-r> :Telescope coc references<CR>
+" map <silent> <A-R> :Telescope coc references<CR>
 
 " 使用 leader h 在预览窗口中看类型，方法文档
 nnoremap <silent> <leader>h :call <SID>show_documentation()<CR>
@@ -678,9 +676,24 @@ lua<< EOF
 require('line')
 -- 代码高亮
 require('treesitter')
+-- You dont need to set any of these options. These are the default ones. Only
+-- the loading is important
+require('telescope').setup {
+  extensions = {
+    fzf = {
+      fuzzy = true,                    -- false will only do exact matching
+      override_generic_sorter = true,  -- override the generic sorter
+      override_file_sorter = true,     -- override the file sorter
+      case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
+                                       -- the default case_mode is "smart_case"
+    }
+  }
+}
+-- To get fzf loaded and working with telescope, you need to call
+-- load_extension, somewhere after setup function:
 -- 集成coc
+require('telescope').load_extension('fzf')
 require('telescope').load_extension('coc')
-
 EOF
 
 

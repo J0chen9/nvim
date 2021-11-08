@@ -1,138 +1,139 @@
 {
-	// 补全相关
-	"suggest.detailMaxLength": 60,
-	"suggest.noselect": true,
-	"suggest.enablePreselect": false,
-	"suggest.triggerAfterInsertEnter": true,
-	"suggest.autoTrigger": "always",
-	"suggest.enablePreview": true,
-	"suggest.floatEnable": true,
-	"suggest.detailField": "preview",
-	"suggest.triggerCompletionWait": 100,
-	"suggest.echodocSupport": true,
-	"suggest.completionItemKindLabels": {
-		"method": "   (Method)",
-		"function": "   (Function)",
-		"variable": "[] (Variable)",
-		"field": " ﴲ  (Field)",
-		"typeParameter": "   (TypeParameter)",
-		"constant": " ﲀ  (Constant)",
-		"class": "   (Class)",
-		"interface": "蘒  (Interface)",
-		"struct": " ﳤ  (Struct)",
-		"event": "   (Event)",
-		"operator": "   (Operator)",
-		"module": "   (Module)",
-		"property": " 襁  (Property)",
-		"enum": " 練  (Enum)",
-		"reference": "   (Reference)",
-		"keyword": "   (Keyword)",
-		"file": "   (File)",
-		"folder": "   (Folder)",
-		"color": "   (Color)",
-		"unit": "   (Unit)",
-		"snippet": "   (Snippet)",
-		"text": "   (Text) ",
-		"constructor": "   (Constructor)",
-		"value": "   (Value)",
-		"enumMember": "   (EnumMember)",
-		"default": "  "
-	},
-	//"suggest.snippetIndicator": "🍦",
-	"suggest.snippetIndicator": "🍺",
-	//diagnostic
-	"diagnostic.displayByAle": false,
-	//	"diagnostic.refreshOnInsertMode": false,
-	//	"diagnostic.checkCurrentLine": true,
-	//	"diagnostic.virtualText": true,
-	//	"diagnostic.virtualTextCurrentLineOnly": false,
-	//	"diagnostic.virtualTextPrefix": "       🔔 ",
-	//	"diagnostic.errorSign": "✗",
-	"diagnostic.errorSign": "🚨",
-	//	"diagnostic.errorSign": " ",
-	//"diagnostic.warningSign": " ",
-	"diagnostic.warningSign": "💩",
-	"diagnostic.infoSign": "🔨",
-	"diagnostic.hintSign": "💡",
-	//git
-	"git.enableGutters": false,
-	"git.branchCharacter": "\uf418",
-	"git.addGBlameToBufferVar": true,
-	"git.addGBlameToVirtualText": true,
-	"git.virtualTextPrefix": "    ❯❯❯ ",
-	//Snippet
-	"coc.preferences.snippetStatusText": "Ⓢ ",
-	//CocList
-	"list.source.files.defaultOptions": [
-		"--auto-preview"
-	],
-	"list.source.outline.defaultOptions": [
-		"--auto-preview"
-	],
-	//Pairs
-	"pairs.enableCharacters": [
-		"(",
-		"[",
-		"{",
-		"'",
-		"\"",
-		"`"
-	],
-	//prettier
-	"coc.preferences.formatOnSaveFiletypes": [
-		"go",
-		"json"
-	],
-	//multiple curssor
-	"cursors.nextKey": "<C-n>",
-	"cursors.previousKey": "<C-p>",
-	"cursors.cancelKey": "<esc>",
-	//sessions
-	"session.directory": "~/.cache/vim/session",
-	// coc-explorer
-	"explorer.icon.expanded": "",
-	"explorer.icon.collapsed": "",
-	"explorer.openAction.strategy": "sourceWindow",
-	"explorer.width": 50,
-	"explorer.sources": [
-		{
-			"name": "buffer",
-			"expand": false
-		},
-		{
-			"name": "file",
-			"expand": true
-		}
-	],
-	"explorer.icon.customIcons": {
-		"icons": {
-			"folderClosed": {
-				"code": "",
-				"color": "#00afaf"
-			},
-			"folderOpened": {
-				"code": "",
-				"color": "#00afaf"
-			}
-		}
-	},
-	"explorer.file.column.indent.indentLine": true,
-	"explorer.icon.source": "nvim-web-devicons",
-	"explorer.icon.enableNerdfont": true,
-	"explorer.file.showHiddenFiles": true,
-	"explorer.buffer.showHiddenBuffers": false,
-	"explorer.quitOnOpen": true,
-	"phpls.enable": true,
-	"intelephense.maxMemory": 3000,
-	"intelephense.licenceKey": "00WIX4YQOC6G943",
-	// php索引路径，这玩意用的就是phpstorm的那套
-	"intelephense.environment.includePaths": [
-		"/home/jochen/workspace/php/"
-	],
-	"intelephense.environment.phpVersion": "7.0",
-	"translator.engines": [
-		"bing",
-		"youdao",
-		"haici"
-	]
+    // 补全相关
+    "suggest.detailMaxLength": 60,
+    "suggest.noselect": true,
+    "suggest.enablePreselect": false,
+    "suggest.triggerAfterInsertEnter": true,
+    "suggest.autoTrigger": "always",
+    "suggest.enablePreview": true,
+    "suggest.floatEnable": true,
+    "suggest.detailField": "preview",
+    "suggest.triggerCompletionWait": 100,
+    "suggest.echodocSupport": true,
+    "suggest.completionItemKindLabels": {
+        "method": "   (Method)",
+        "function": "   (Function)",
+        "variable": "[] (Variable)",
+        "field": " ﴲ  (Field)",
+        "typeParameter": "   (TypeParameter)",
+        "constant": " ﲀ  (Constant)",
+        "class": "   (Class)",
+        "interface": "蘒  (Interface)",
+        "struct": " ﳤ  (Struct)",
+        "event": "   (Event)",
+        "operator": "   (Operator)",
+        "module": "   (Module)",
+        "property": " 襁  (Property)",
+        "enum": " 練  (Enum)",
+        "reference": "   (Reference)",
+        "keyword": "   (Keyword)",
+        "file": "   (File)",
+        "folder": "   (Folder)",
+        "color": "   (Color)",
+        "unit": "   (Unit)",
+        "snippet": "   (Snippet)",
+        "text": "   (Text) ",
+        "constructor": "   (Constructor)",
+        "value": "   (Value)",
+        "enumMember": "   (EnumMember)",
+        "default": "  "
+    },
+    //"suggest.snippetIndicator": "🍦",
+    "suggest.snippetIndicator": "🍺",
+    //diagnostic
+    "diagnostic.displayByAle": false,
+    //	"diagnostic.refreshOnInsertMode": false,
+    //	"diagnostic.checkCurrentLine": true,
+    //	"diagnostic.virtualText": true,
+    //	"diagnostic.virtualTextCurrentLineOnly": false,
+    //	"diagnostic.virtualTextPrefix": "       🔔 ",
+    //	"diagnostic.errorSign": "✗",
+    "diagnostic.errorSign": "🚨",
+    //	"diagnostic.errorSign": " ",
+    //"diagnostic.warningSign": " ",
+    "diagnostic.warningSign": "💩",
+    "diagnostic.infoSign": "🔨",
+    "diagnostic.hintSign": "💡",
+    //git
+    "git.enableGutters": false,
+    "git.branchCharacter": "\uf418",
+    "git.addGBlameToBufferVar": true,
+    "git.addGBlameToVirtualText": true,
+    "git.virtualTextPrefix": "    ❯❯❯ ",
+    //Snippet
+    "coc.preferences.snippetStatusText": "Ⓢ ",
+    //CocList
+    "list.source.files.defaultOptions": [
+        "--auto-preview"
+    ],
+    "list.source.outline.defaultOptions": [
+        "--auto-preview"
+    ],
+    //Pairs
+    "pairs.enableCharacters": [
+        "(",
+        "[",
+        "{",
+        "'",
+        "\"",
+        "`"
+    ],
+    //prettier
+    "coc.preferences.formatOnSaveFiletypes": [
+        "go",
+        "json"
+    ],
+    //multiple curssor
+    "cursors.nextKey": "<C-n>",
+    "cursors.previousKey": "<C-p>",
+    "cursors.cancelKey": "<esc>",
+    //sessions
+    "session.directory": "~/.cache/vim/session",
+    // coc-explorer
+    "explorer.icon.expanded": "",
+    "explorer.icon.collapsed": "",
+    "explorer.openAction.strategy": "sourceWindow",
+    "explorer.width": 50,
+    "explorer.sources": [
+        {
+            "name": "buffer",
+            "expand": false
+        },
+        {
+            "name": "file",
+            "expand": true
+        }
+    ],
+    "explorer.icon.customIcons": {
+        "icons": {
+            "folderClosed": {
+                "code": "",
+                "color": "#00afaf"
+            },
+            "folderOpened": {
+                "code": "",
+                "color": "#00afaf"
+            }
+        }
+    },
+    "explorer.file.column.indent.indentLine": true,
+    "explorer.icon.source": "nvim-web-devicons",
+    "explorer.icon.enableNerdfont": true,
+    "explorer.file.showHiddenFiles": true,
+    "explorer.buffer.showHiddenBuffers": false,
+    "explorer.quitOnOpen": true,
+    "phpls.enable": true,
+    "intelephense.maxMemory": 3000,
+    "intelephense.licenceKey": "00WIX4YQOC6G943",
+    // php索引路径，这玩意用的就是phpstorm的那套
+    "intelephense.environment.includePaths": [
+        "/home/jochen/workspace/php/"
+    ],
+    "intelephense.phpdoc.useFullyQualifiedNames": true,
+    "intelephense.environment.phpVersion": "7.0",
+    "translator.engines": [
+        "bing",
+        "youdao",
+        "haici"
+    ]
 }
