@@ -65,7 +65,6 @@ set ttyfast " 快速鼠标滚动
 
 set mouse=nv
 " 解决tmux渲染冲突问题
-set t_Co=256 			" terminal Color 指终端支持的颜色数量
 " set term=xterm-256color 	"告诉Vim使用哪种终端类型 它控制Vim各个方面的显示/渲染
 set virtualedit=block
 
@@ -103,7 +102,7 @@ vnoremap <C-C> y
 noremap sk :set nosplitbelow<CR>:split<CR>:set splitbelow<CR>
 noremap sj :set splitbelow<CR>:split<CR>
 noremap sh :set nosplitright<CR>:vsplit<CR>:set splitright<CR>
-noremap sj :set splitright<CR>:vsplit<CR>
+noremap sl :set splitright<CR>:vsplit<CR>
 " Spelling Check with <space>sc
 noremap <LEADER>sc :set spell!<CR>
 
@@ -133,6 +132,7 @@ noremap <F5> :set splitbelow<CR>:split<CR>:res -12<CR>:term<CR>
 " c-\ c-n进入正常模式
 let g:neoterm_autoscroll = 1
 autocmd TermOpen term://* startinsert
+tnoremap <ESC> <C-\><C-N><C-w>k 
 " Press <SPACE> + q to close the window below the current window
 noremap <LEADER>q <C-w>j:q<CR>
 " ==============================================================================
@@ -156,6 +156,7 @@ Plug 'lukas-reineke/indent-blankline.nvim', { 'branch': 'lua' }
 " colorscheme
 Plug 'w0ng/vim-hybrid'  " 不支持真色彩 
 Plug 'romgrk/doom-one.vim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'glepnir/zephyr-nvim'
 Plug 'nvim-treesitter/nvim-treesitter'
 " fuzzy finder 
@@ -218,24 +219,39 @@ call plug#end()
 " ==============================================================================
 " 背景主题(用插件下载的主题需要在这里配置使用，否则会报错)
 set background=dark
-
-colorscheme hybrid
-
-"colorschem doom-one
-"let g:doom_one_terminal_colors = v:true
 "真色彩
 set termguicolors
+colorscheme hybrid
+
+" colorschem doom-one
+" let g:doom_one_terminal_colors = v:true
+"
+"let g:tokyonight_style = "night"
+"let g:tokyonight_italic_functions = 1
+"let g:tokyonight_italic_keywords = 1
+"let g:tokyonight_italic_comments = 1
+"let g:tokyonight_italic_variables = 1
+"let g:tokyonight_lualine_bold = v:true
+"let g:tokyonight_hide_inactive_statusline = v:true
+"
+"
+"let g:tokyonight_sidebars = [ "qf", "vista_kind", "terminal", "packer", "lazygit" ]
+"let g:tokyonight_transparent_sidebar = v:true
+"
+"" Change the "hint" color to the "orange" color, and make the "error" color bright red
+"let g:tokyonight_colors = {
+"   \ 'hint': 'orange',
+"  \ 'error': '#ff0000'
+"  \ }
+" Load the colorscheme
+"colorscheme tokyonight
 
 " 透明背景
-"hi Normal     ctermbg=NONE guibg=NONE
-"hi LineNr     ctermbg=NONE guibg=NONE
-"hi SignColumn ctermbg=NONE guibg=NONE
-"colorscheme zephyr
+hi Normal     ctermbg=NONE guibg=NONE
+hi LineNr     ctermbg=NONE guibg=NONE
+hi SignColumn ctermbg=NONE guibg=NONE
+" colorscheme zephyr
 
-"=== 光标设置
-autocmd InsertEnter * set guicursor=a:blinkon1,i:ver35-Cursor
-autocmd InsertLeave * set guicursor=i:ver35-Cursor
-autocmd VimLeave  * set gcr=n-v-c:ver25-Cursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor,a:blinkon1a
 
 "== 自动清空命令输出
 function! s:empty_message(timer)
@@ -285,7 +301,7 @@ vim.g.indent_blankline_context_patterns = {
 	'import_statement'
 }
 vim.g.indent_blankline_char = '│'
-vim.g.indent_blankline_filetype_exclude = {'help','startify','defx', 'denite','startify','tagbar','vista_kind','vista','coc-explorer','dashboard'}
+vim.g.indent_blankline_filetype_exclude = {'ranger','chosenfile','help','startify','defx', 'denite','startify','tagbar','vista_kind','vista','coc-explorer','dashboard'}
 EOF
 
 " ==============================================================================
@@ -329,10 +345,10 @@ let g:vista#renderer#icons = {
 " ==============================================================================
 " Find files using Telescope command-line sugar.
 nnoremap <C-p> <cmd>Telescope find_files theme=dropdown prompt_prefix=🔍<cr>
-nnoremap <A-f> <cmd>Telescope current_buffer_fuzzy_find rompt_prefix=🔍<cr>
+nnoremap <A-f> <cmd>Telescope current_buffer_fuzzy_find prompt_prefix=🔍<cr>
 nnoremap <A-F> <cmd>Telescope live_grep  prompt_prefix=🔍<cr>
 nnoremap <leader>fb <cmd>Telescope buffers  prompt_prefix=🔍<cr>
-nnoremap <leader>ft <cmd>Telescope help_tags  prompt_prefix=🔍<cr>
+nnoremap <leader>ft <cmd>Telescope treesitter  prompt_prefix=🔍<cr>
 nnoremap <leader>fh <cmd>Telescope oldfiles theme=dropdown prompt_prefix=🔍<cr>
 
 " ==============================================================================
@@ -378,12 +394,12 @@ nmap ss <Plug>(easymotion-s2)
 " ============================================================================== 
 " ranger
 let g:ranger_map_keys = 0
-map <leader>or :Ranger<CR>
+map <leader>or :RangerCurrentFileNewTab<CR>
 let g:ranger_replace_netrw = 1 " open ranger when vim open a directory
 
 " lazygit
 nnoremap <silent> <leader>gg :LazyGit<CR>
-let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+let g:lazygit_floating_window_winblend = 1 " transparency of floating window
 let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
 let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
 let g:lazygit_floating_window_use_plenary = 1 " use plenary.nvim to manage floating window if available
@@ -462,7 +478,7 @@ nmap <silent> <A-i> <Plug>(coc-implementation)  " 跳转到实现
 "nmap <silent> <A-i> :Telescope coc implementations" 跳转到实现
 nmap <silent> <A-r> :call CocActionAsync('jumpReferences')<CR>
 "nmap <silent> <A-r> <Plug>(coc-references)
-" map <silent> <A-R> :Telescope coc references<CR>
+map <silent> <A-R> :Telescope coc references<CR>
 
 " 使用 leader h 在预览窗口中看类型，方法文档
 nnoremap <silent> <leader>h :call <SID>show_documentation()<CR>
@@ -531,13 +547,16 @@ nnoremap <leader>3 :Telescope coc commands<CR>
 nnoremap <silent><nowait> <leader>4  :<C-u>:Telescope coc diagnostics<cr>
 nnoremap <silent><nowait> <leader>5  :<C-u>CocList<cr>          
 nmap <leader>6 <Plug>(coc-refactor)
-nnoremap <silent><space>y  :<C-u>CocList -A --normal yank<cr>
+nnoremap <silent><A-v>  :<C-u>CocList -A --normal yank<cr>
+inoremap <silent><A-v>  <ESC>:<C-u>CocList -A --normal yank<cr>i
 " ==============================================================================
 " === https://github.com/akinsho/bufferline.nvim
 " ============================================================================== 
 nnoremap <silent><A-l> :BufferLineCycleNext<CR>
 nnoremap <silent><A-h> :BufferLineCyclePrev<CR>
 nnoremap  <silent><A-s> :BufferLinePick <CR>
+nnoremap  <silent><A-d> :BufferLineCloseLeft<CR> :BufferLineCloseRight<CR>
+
 let g:airline#extensions#tabline#enabled = 0
 lua << EOF
 require('bufferline').setup {
