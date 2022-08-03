@@ -221,9 +221,9 @@ call plug#end()
 set background=dark
 "真色彩
 set termguicolors
-colorscheme hybrid
 
-" colorschem doom-one
+colorschem doom-one
+colorscheme hybrid
 " let g:doom_one_terminal_colors = v:true
 "
 "let g:tokyonight_style = "night"
@@ -250,7 +250,7 @@ colorscheme hybrid
 hi Normal     ctermbg=NONE guibg=NONE
 hi LineNr     ctermbg=NONE guibg=NONE
 hi SignColumn ctermbg=NONE guibg=NONE
-" colorscheme zephyr
+"colorscheme zephyr
 
 
 "== 自动清空命令输出
